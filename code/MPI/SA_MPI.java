@@ -3,36 +3,43 @@ import org.apache.commons.math3.random.MersenneTwister;
 import org.apache.commons.math3.random.RandomGenerator;
 import org.apache.commons.math3.random.RandomDataGenerator;
 import java.lang.Math;
+import mpi.*;
 
-public class SA
+public class SA_MPI
 {
-    private static final double INITIAL_HEAT = 100;
-    private static final double MIN_HEAT = 0.001;
-    private static final int NUM_SWAPS = 1;
+    // Class constants:
+    private static final double DEFAULT_INITIAL_HEAT = 100;
+    private static final double DEFAULT_MIN_HEAT = 0.001;
+    private static final int DEFAULT_NUM_SWAPS = 1;
 
-    public static void main(String[] argv)
+    // Member constants:
+    private final double INITIAL_HEAT;
+    private final double MIN_HEAT;
+    private final int NUM_SWAPS;
+    private final int MY_RANK;
+    private final int MPI_SIZE;
+
+
+    // Constructors:
+    public SA_MPI(int rank, int mpi_size)
     {
-        int n = Integer.parseInt(argv[0]);                          // time to wait during annealing steps for the system to stabilize
-        Graph g = make_graph(argv[1]);                              // input graph file
-        RandomGenerator mt19937 = new MersenneTwister(60L);         // random engine
-        RandomDataGenerator rng = new RandomDataGenerator(mt19937); // RNG used by annealing
-        run(g, n, rng);
-    } // end Main
+        // delegate to the other constructor with default values
+        this(rank, mpi_size, DEFAULT_INITIAL_HEAT, DEFAULT_MIN_HEAT, DEFAULT_NUM_SWAPS);
+    } // end Constructor(int, int)
 
 
-    public static void run(Graph g, int n, RandomDataGenerator rng)
+    public SA_MPI(int rank, int mpi_size, double initial_heat, double min_heat, int num_swaps)
     {
-        long start = System.currentTimeMillis();
-
-        Solution x = simulated_annealing(g, n, rng);
-
-        long end = System.currentTimeMillis();
-        System.out.println("Best solution found:" + x);
-        System.out.println("Elapsed time:" + (end - start) + " ms.");
-    } // end method run
+        MY_RANK = rank;
+        MPI_SIZE = mpi_size;
+        INITIAL_HEAT = initial_heat;
+        MIN_HEAT = min_heat; 
+        NUM_SWAPS = num_swaps;
+    } // end Constructor(int, int, double, double, int)
 
 
-    public static Solution simulated_annealing(Graph g, int n, RandomDataGenerator rng)
+    // Run function:
+    public Solution simulated_annealing(Graph g, int n, RandomDataGenerator rng)
     {
         double heat = INITIAL_HEAT;                 // entropy of the system
         int step = 2;                               // annealing step counter
@@ -83,32 +90,15 @@ public class SA
     } // end method simulated_annealing
 
 
+    // Utility functions:
     private static double temperature(double current_heat, int current_time)
     {
         return (current_heat / Math.log(current_time));
-    }
+    } // end method temperature
+
 
     private static double acceptance_probability(double previous_solution, double new_solution, double current_heat)
     {
         return (1 / (1 + Math.exp((new_solution - previous_solution) / current_heat)));
     } // end method acceptance_probability
-
-    private static Graph make_graph(String file_name)
-    {
-        FileReader file;
-        Graph g = null;
-
-        try
-        {
-            file = new FileReader(file_name);
-            g = new Graph(file);
-            file.close();
-        } // end try
-        catch(IOException e)
-        {
-            e.printStackTrace();
-        } // end catch
-
-        return g;
-    } // end method make_graph
 } // end class SA
