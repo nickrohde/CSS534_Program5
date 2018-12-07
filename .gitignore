@@ -1,3 +1,15 @@
 *.class
 *.zip
 *.txt
+*.aux
+*.log
+*.out
+*.gz
+*.toc
+code/dependencies/commons-math3-3.6.1/docs/
+code/dependencies/commons-math3-3.6.1/commons-math3-3.6.1-javadoc.jar
+code/dependencies/commons-math3-3.6.1/commons-math3-3.6.1-sources.jar
+code/dependencies/commons-math3-3.6.1/commons-math3-3.6.1-test-sources.jar
+code/dependencies/commons-math3-3.6.1/commons-math3-3.6.1-tests.jar
+code/dependencies/commons-math3-3.6.1/commons-math3-3.6.1-tools.jar
+
