@@ -1,18 +1,19 @@
 package uwb.css534.prog5;
 
+import org.apache.commons.math3.random.RandomDataGenerator;
+import org.apache.spark.SparkEnv;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.broadcast.Broadcast;
 
-import java.util.Random;
 
 public class Annealing implements Function<Solution, Solution> {
     double heat = 0;
     int iterations = 0;
     int swaps = 1;
     Broadcast<Solution> best_broadcast;
-    Broadcast<Random> rand_broadcast;
+    Broadcast<RandomDataGenerator[]> rand_broadcast;
     
-    public Annealing(double heat, int iterations, int swaps, Broadcast<Solution> best_broadcast, Broadcast<Random> rand_broadcast) {
+    public Annealing(double heat, int iterations, int swaps, Broadcast<Solution> best_broadcast, Broadcast<RandomDataGenerator[]> rand_broadcast) {
         this.heat = heat;
         this.iterations = iterations;
         this.swaps = swaps;
@@ -31,6 +32,8 @@ public class Annealing implements Function<Solution, Solution> {
 
     public Solution call(Solution candidate) {
         Solution best = best_broadcast.value();
+        int rand_index = Integer.parseInt(SparkEnv.get().executorId());
+        RandomDataGenerator rng = rand_broadcast.value()[rand_index];
         for (int i = 0; i < iterations; i++) {
             // find a neighboring solution by swapping a number of random cities
             Solution new_solution = new Solution(candidate);
@@ -47,7 +50,7 @@ public class Annealing implements Function<Solution, Solution> {
             } // end if
             else {
                 // check if we will accept this new solution
-                if (acceptance_probability(candidate.energy(), new_solution.energy()) > rand_broadcast.value().nextFloat()) {
+                if (acceptance_probability(candidate.energy(), new_solution.energy()) > rng.nextUniform(0.0, 1.0)) {
                     // new solution was accepted
                     candidate = new Solution(new_solution);
                 } // end if
