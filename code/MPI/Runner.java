@@ -4,37 +4,36 @@ import org.apache.commons.math3.random.RandomGenerator;
 import org.apache.commons.math3.random.RandomDataGenerator;
 import java.lang.Math;
 import mpi.*;
-import org.nustaq.serialization.FSTConfiguration;
-import org.nustaq.serialization.FSTObjectInput;
-import org.nustaq.serialization.FSTObjectOutput;
-import org.nustaq.serialization.util.FSTInputStream;
 
 public class Runner
 {
-    private static FSTConfiguration conf = FSTConfiguration.createDefaultConfiguration();
-
-    public static void main(String[] argv)
+    public static void main(String[] argv) throws MPIException
     {
         MPI.Init(argv);                                               // initialize MPI
-        MPI.COMM_WORLD.setErrhandler(MPI.ERRORS_RETURN);              // set error handler in case of exception
+        //MPI.COMM_WORLD.setErrhandler(MPI.ERRORS_RETURN);              // set error handler in case of exception
 
         int n = Integer.parseInt(argv[0]);                            // time to wait during annealing steps for the system to stabilize
         Graph g = make_graph(argv[1]);                                // input graph file
 
-        RandomGenerator mt19937 = new MersenneTwister(60L);           // random engine
+        RandomGenerator mt19937 = new MersenneTwister(60 * MPI.COMM_WORLD.Rank());           // random engine
         RandomDataGenerator rng = new RandomDataGenerator(mt19937);   // RNG used by annealing
 
         try
         {
-            SA_MPI SA = new SA_MPI(MPI.COMM_WORLD.Rank(), MPI.COMM_WORLD.Size());
+            SA_MPI SA = new SA_MPI(MPI.COMM_WORLD.Rank(), MPI.COMM_WORLD.Size(), 100.0, 0.0, 1);
             long time = System.currentTimeMillis();
 
             Solution x = SA.simulated_annealing(g, n, rng);
-
+            
             time = System.currentTimeMillis() - time;
 
-            System.out.println("Solution is:" + x);
-            System.out.println("Execution time: " + time + " ms.");
+            Solution res = compare_solutions(x, MPI.COMM_WORLD.Rank(), MPI.COMM_WORLD.Size());
+
+            if (MPI.COMM_WORLD.Rank() == 0)
+            {
+                 System.out.println("Solution is:" + res);
+                 System.out.println("Execution time: " + time + " ms.");
+            }
         } // end try
         catch(Exception e)
         {
@@ -45,28 +44,28 @@ public class Runner
     } // end Main
 
 
-    private static Solution compare_solutions(Solution x, int my_rank, int mpi_size)
+    private static Solution compare_solutions(Solution x, int my_rank, int mpi_size) throws MPIException
     {
+	if(x == null)
+        {
+           System.out.println("rank " + my_rank + " produced a null solution");
+        }
+
         if(my_rank == 0)
         {
             Solution res = null;
+            Solution temp[] = new Solution[1];
 
             for (int src = 1; src < mpi_size; src++)
             {
-                // get message length from source node
-                int length[] = new int[1];
-                MPI.COMM_WORLD.recv(length, 0, 1, MPI.INT, src, 0);
-
                 // receive actual message
-                byte msg[] = new byte[length[0]];
-                MPI.COMM_WORLD.recv(msg, 0, 1, MPI.BYTE, src, 0);
+//                System.out.println("Waiting for node " + src + " to send solution");
+                MPI.COMM_WORLD.Recv(temp, 0, 1, MPI.OBJECT, src, 0);
+//		System.out.println("Received solution from node " + src + "\nSolution is: " + temp[0]);
 
-                // add object to list
-                Solution temp = (Solution)conf.asObject(msg);
-
-                if (res == null || res.energy() > temp.energy())
+                if (res == null || res.energy() > temp[0].energy())
                 {
-                    res = new Solution(temp);
+                    res = new Solution(temp[0]);
                 } // end if
             } // end for
 
@@ -74,12 +73,11 @@ public class Runner
         } // end if
         else
         {
-            byte msg = conf.asByteArray(x);
-            int length[] = new int[1];
-            length[0] = msg.length;
-            MPI.COMM_WORLD.send(length, 0, 1, MPI.INT, 0, 0);
-            MPI.COMM_WORLD.send(msg, 0, msg.length, MPI.BYTE, 0, 1);
-
+            Solution msg[] = new Solution[1];
+            msg[0] = new Solution(x);
+//	    System.out.println("Rank " + my_rank + " sending solution " + x + " to master!");
+            MPI.COMM_WORLD.Send(msg, 0, msg.length, MPI.OBJECT, 0, 0);
+//            System.out.println("Rank " + my_rank + " sent solution to master, returning");
             return null;
         } // end else
     } // end method compare_solutions

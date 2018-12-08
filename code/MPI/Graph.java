@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.io.*;
 import java.text.DecimalFormat;
 
-public class Graph
+public class Graph implements Serializable
 {
     // Class constants:
     private static final Coordinate_Pair _origin = new Coordinate_Pair(0.0, 0.0);
