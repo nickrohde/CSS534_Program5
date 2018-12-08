@@ -7,15 +7,18 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import org.apache.commons.math3.random.MersenneTwister;
+import org.apache.commons.math3.random.RandomDataGenerator;
+import org.apache.commons.math3.random.RandomGenerator;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.broadcast.Broadcast;
-import org.apache.spark.storage.StorageLevel;
-
 import org.apache.spark.api.java.JavaRDD;
 
 public class App {
 	private static int NUM_PARTITIONS = 32;
+	private static int MAX_EXECUTORS = 12;
+
 	private static JavaSparkContext jsc;// = new JavaSparkContext();
 	private static final double INITIAL_HEAT = 100;
 	private static final double MIN_HEAT = 0.001;
@@ -25,9 +28,8 @@ public class App {
 		int n = Integer.parseInt(argv[0]); // time to wait during annealing steps for the system to stabilize
 		Graph g = make_graph(argv[1]); // input graph file
 		NUM_PARTITIONS = Integer.parseInt(argv[2]);
-		//RandomGenerator mt19937 = new MersenneTwister(60L); // random engine
-		//RandomDataGenerator rng = new RandomDataGenerator(mt19937); // RNG used by annealing
-		Random rng = new Random(60L);
+		RandomGenerator mt19937 = new MersenneTwister(60L); // random engine
+		RandomDataGenerator rng = new RandomDataGenerator(mt19937); // RNG used by annealing
 		configurSpark(); // configer spark driver
 		run(g, n, rng); // run simulated annealing algorithm
 	} // end Main
@@ -38,13 +40,14 @@ public class App {
 
 		// register Kryo classes
 		conf.registerKryoClasses((Class<?>[]) Arrays
-				.<Class<?>>asList(Solution.class, Coordinate_Pair.class, Graph.class, Solution.class, Annealing.class).toArray());
+				.<Class<?>>asList(Solution.class, Coordinate_Pair.class, Graph.class, Solution.class, Annealing.class)
+				.toArray());
 
 		jsc = new JavaSparkContext(conf);
 		jsc.setLogLevel("OFF");
 	}
 
-	public static void run(Graph g, int n, Random rng) {
+	public static void run(Graph g, int n, RandomDataGenerator rng) {
 		long start = System.currentTimeMillis();
 
 		Solution x = simulated_annealing(g, n, rng);
@@ -54,7 +57,7 @@ public class App {
 		System.out.println("Elapsed time:" + (end - start) + " ms.");
 	} // end method run
 
-	public static Solution simulated_annealing(Graph g, int n, Random rng) {
+	public static Solution simulated_annealing(Graph g, int n, RandomDataGenerator rng) {
 		double heat = INITIAL_HEAT; // entropy of the system
 		int step = 2; // annealing step counter
 		Solution best = new Solution();
@@ -63,8 +66,15 @@ public class App {
 
 		// for broadcasting best found solution
 		Broadcast<Solution> best_broadcast = jsc.broadcast(best); 
+
+		RandomDataGenerator[] rngs = new RandomDataGenerator[MAX_EXECUTORS];
+		rngs[0] = rng;
+		for(int i=1; i< MAX_EXECUTORS; i++)
+			rngs[i] = new RandomDataGenerator( new MersenneTwister(60L * i));
+		
+
 		// broadcast random generator once
-		Broadcast<Random> rng_broadcast = jsc.broadcast(rng); 
+		Broadcast<RandomDataGenerator[]> rng_broadcast = jsc.broadcast(rngs); 
 
 		List<Solution> candidatesList = Collections.nCopies(NUM_PARTITIONS, candidate);
 		JavaRDD<Solution> candidates = jsc.parallelize(candidatesList, NUM_PARTITIONS);
@@ -85,7 +95,7 @@ public class App {
 				annealingProcess.UpdateBroadcast(jsc.broadcast(a_best));
 				best = a_best;
 			}
-
+			//System.out.println(candidates.collect());
 			// log loop time
 			long end = System.currentTimeMillis();
 			// log best solution found (distance just)
