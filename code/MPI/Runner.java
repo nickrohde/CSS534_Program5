@@ -20,20 +20,21 @@ public class Runner
 
         try
         {
-            SA_MPI SA = new SA_MPI(MPI.COMM_WORLD.Rank(), MPI.COMM_WORLD.Size(), 100.0, 0.0, 1);
+            SA_MPI SA = new SA_MPI(MPI.COMM_WORLD.Rank(), MPI.COMM_WORLD.Size());
             long time = System.currentTimeMillis();
 
             Solution x = SA.simulated_annealing(g, n, rng);
             
             time = System.currentTimeMillis() - time;
 
-            Solution res = compare_solutions(x, MPI.COMM_WORLD.Rank(), MPI.COMM_WORLD.Size());
+            //Solution res = compare_solutions(x, MPI.COMM_WORLD.Rank(), MPI.COMM_WORLD.Size());
+            Solution res = (Solution)Communicator.get_best_solution(x, MPI.COMM_WORLD.Rank(), MPI.COMM_WORLD.Size());
 
             if (MPI.COMM_WORLD.Rank() == 0)
             {
                  System.out.println("Solution is:" + res);
                  System.out.println("Execution time: " + time + " ms.");
-            }
+            } // end if
         } // end try
         catch(Exception e)
         {
@@ -46,11 +47,6 @@ public class Runner
 
     private static Solution compare_solutions(Solution x, int my_rank, int mpi_size) throws MPIException
     {
-	if(x == null)
-        {
-           System.out.println("rank " + my_rank + " produced a null solution");
-        }
-
         if(my_rank == 0)
         {
             Solution res = null;
@@ -59,9 +55,7 @@ public class Runner
             for (int src = 1; src < mpi_size; src++)
             {
                 // receive actual message
-//                System.out.println("Waiting for node " + src + " to send solution");
                 MPI.COMM_WORLD.Recv(temp, 0, 1, MPI.OBJECT, src, 0);
-//		System.out.println("Received solution from node " + src + "\nSolution is: " + temp[0]);
 
                 if (res == null || res.energy() > temp[0].energy())
                 {
@@ -73,11 +67,13 @@ public class Runner
         } // end if
         else
         {
+            // prepare the message
             Solution msg[] = new Solution[1];
             msg[0] = new Solution(x);
-//	    System.out.println("Rank " + my_rank + " sending solution " + x + " to master!");
+
+            // send the message
             MPI.COMM_WORLD.Send(msg, 0, msg.length, MPI.OBJECT, 0, 0);
-//            System.out.println("Rank " + my_rank + " sent solution to master, returning");
+
             return null;
         } // end else
     } // end method compare_solutions
