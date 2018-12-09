@@ -51,7 +51,7 @@ public class SA_MPI
         while (heat > MIN_HEAT)
         {
             // allow system to stabilize before cooling further
-            for (int i = 0; i < n; i++)
+            for (int i = 0; i < (n / MPI_SIZE); i++)
             {
                 // create a new solution from our current candidate
                 Solution new_solution = new Solution(candidate);
@@ -80,6 +80,8 @@ public class SA_MPI
                     } // end if
                 } // end else
             } // end for i
+
+            candidate = (Solution)Communicator.get_best_solution(candidate, MY_RANK, MPI_SIZE);
 
             // update system entropy and annealing step counter
             heat = temperature(heat, step);
