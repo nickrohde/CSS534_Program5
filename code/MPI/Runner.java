@@ -9,9 +9,23 @@ public class Runner
 {
     public static void main(String[] argv) throws MPIException
     {
-        MPI.Init(argv);                                               // initialize MPI
-        //MPI.COMM_WORLD.setErrhandler(MPI.ERRORS_RETURN);              // set error handler in case of exception
+        try
+        {
+            MPI.Init(argv);                                               // initialize MPI
 
+            run(argv);
+
+            MPI.Finalize();                                               // let MPI know we're done
+        } // end try
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        } // end catch
+    } // end Main
+
+
+    private static void run(String[] argv) throws MPIException
+    {
         int n = Integer.parseInt(argv[0]);                            // time to wait during annealing steps for the system to stabilize
         Graph g = make_graph(argv[1]);                                // input graph file
 
@@ -40,43 +54,42 @@ public class Runner
         {
             e.printStackTrace();
         } // end catch
-
-        MPI.Finalize();                                               // let MPI know we're done
-    } // end Main
+    } // end method run
 
 
-    private static Solution compare_solutions(Solution x, int my_rank, int mpi_size) throws MPIException
+    private static double benchmark(String[] argv, int iterations) throws MPIException
     {
-        if(my_rank == 0)
-        {
-            Solution res = null;
-            Solution temp[] = new Solution[1];
+        int n = Integer.parseInt(argv[0]);                            // time to wait during annealing steps for the system to stabilize
+        Graph g = make_graph(argv[1]);                                // input graph file
 
-            for (int src = 1; src < mpi_size; src++)
+        RandomGenerator mt19937 = new MersenneTwister(60 * MPI.COMM_WORLD.Rank());           // random engine
+        RandomDataGenerator rng = new RandomDataGenerator(mt19937);   // RNG used by annealing
+        double duration = 0L;
+
+        for (int i = 0; i < iterations; i++)
+        {
+            try
             {
-                // receive actual message
-                MPI.COMM_WORLD.Recv(temp, 0, 1, MPI.OBJECT, src, 0);
+                SA_MPI SA = new SA_MPI(MPI.COMM_WORLD.Rank(), MPI.COMM_WORLD.Size());
+                long time = System.currentTimeMillis();
 
-                if (res == null || res.energy() > temp[0].energy())
-                {
-                    res = new Solution(temp[0]);
-                } // end if
-            } // end for
+                Solution x = SA.simulated_annealing(g, n, rng);
+                
+                time = System.currentTimeMillis() - time;
+                duration += ((double)time / iterations);
 
-            return res;
-        } // end if
-        else
-        {
-            // prepare the message
-            Solution msg[] = new Solution[1];
-            msg[0] = new Solution(x);
+                Solution res = (Solution)Communicator.get_best_solution(x, MPI.COMM_WORLD.Rank(), MPI.COMM_WORLD.Size());
+            } // end try
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            } // end catch
+        } // end for
 
-            // send the message
-            MPI.COMM_WORLD.Send(msg, 0, msg.length, MPI.OBJECT, 0, 0);
+        return duration;
 
-            return null;
-        } // end else
-    } // end method compare_solutions
+    } // end method benchmark
+
 
 
     private static Graph make_graph(String file_name)
