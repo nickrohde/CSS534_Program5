@@ -39,7 +39,7 @@ public class SA_MPI
 
 
     // Run function:
-    public Solution simulated_annealing(Graph g, int n, RandomDataGenerator rng)
+    public Solution simulated_annealing(Graph g, int n, RandomDataGenerator rng) throws MPIException
     {
         double heat = INITIAL_HEAT;                 // entropy of the system
         int step = 2;                               // annealing step counter
