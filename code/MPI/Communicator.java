@@ -35,20 +35,20 @@ public class Communicator
     } // end method receive_from
 
 
-    public static Object get_best_solution(Object solution, int my_rank, int mpi_size)
+    public static Object get_best_solution(Object solution, int my_rank, int mpi_size) throws MPIException
     {
         if(my_rank == 0)
         {
-            Solution result = new Solution(solution);
-            Solution temp[];
+            Solution result = new Solution((Solution)solution);
+            Object temp[];
 
             for (int src = 1; src < mpi_size; src++)
             {
-                temp = (Solution[])receive_from(1, src, 0);
+                temp = receive_from(1, src, 0);
 
-                if (temp.length > 0 && temp[0].energy() < result.energy())
+                if (temp.length > 0 && ((Solution)temp[0]).energy() < result.energy())
                 {
-                    result = new Solution(temp[0]);
+                    result = new Solution((Solution)temp[0]);
                 } // end if
             } // end for
 
@@ -67,7 +67,7 @@ public class Communicator
 
             send_to(msg, MASTER, 0);
 
-            Solution res[] = receive_from(1, MASTER, 1);
+            Object res[] = receive_from(1, MASTER, 1);
 
             return res[0];
         } // end else
