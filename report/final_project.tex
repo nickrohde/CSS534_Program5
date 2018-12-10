@@ -71,6 +71,24 @@
 			\multicolumn{3}{l}{\tiny $^\dagger$ Average over 100 trials}
 			\end{tabular}
 		\smallskip\smallskip\smallskip\smallskip
+
+			\centering
+			\captionof{table}{Comparison of Computation for Spark} 
+			\begin{tabular}{c|c|cc}\label{T2}
+				\# Nodes & \#Cores & Execution Time & Performance Improvement\\
+				\hline
+				1	& 1 & 160.843	& N/A\\
+				1	& 2 & 113.404	& 1.418\\
+				1	& 3 & 77.057	& 2.087\\
+				2	& 2 & 92.786	& 1.733\\
+				2	& 4 & 60.676	& 2.650\\
+				2	& 6 & 45.464	& 3.537\\
+				4	& 4 & 68.041	& 2.363\\
+				4	& 8 & 41.378	& \color{red}3.887\\
+				4	& 12 & 45.328	& 3.548\\
+			\noalign{\smallskip}\hline\noalign{\smallskip}
+			\end{tabular}
+		\smallskip\smallskip\smallskip\smallskip
 		\end{minipage}
 
 
@@ -118,7 +136,13 @@ Execution time: 7898 ms.
 --------------------------------------------
 
 /** Spark Program **/
+spark-submit --class uwb.css534.prog5.App --master "spark://cssmpi1.uwb.edu:60007" --total-executor-cores 12 sa-tsp-spark-1.0-SNAPSHOT.jar 2000000 CSS534_Program5/code/input_files/cities.txt 12
+Best solution found:path: 21 -> 27 -> 24 -> 25 -> 7 -> 31 -> 2 -> 22 -> 18 -> 12 -> 15 -> 28 -> 26 -> 4 -> 20 -> 9 -> 32 -> 14 -> 8 -> 34 -> 30 -> 19 -> 13 -> 23 -> 6 -> 10 -> 35 -> 5 -> 0 -> 11 -> 33 -> 17 -> 29 -> 3 -> 1 -> 16 | distance: 447.38786463942176
+Elapsed time:15438 ms.
 
+spark-submit --class uwb.css534.prog5.App --master "spark://cssmpi1.uwb.edu:60007" --total-executor-cores 12 sa-tsp-spark-1.0-SNAPSHOT.jar 10000000 CSS534_Program5/code/input_files/cities.txt 100
+Best solution found:path: 21 -> 27 -> 24 -> 25 -> 7 -> 31 -> 2 -> 22 -> 18 -> 12 -> 15 -> 28 -> 26 -> 4 -> 20 -> 9 -> 32 -> 14 -> 8 -> 34 -> 30 -> 19 -> 13 -> 23 -> 6 -> 10 -> 35 -> 5 -> 0 -> 11 -> 33 -> 17 -> 29 -> 3 -> 1 -> 16 | distance: 447.38786463942176
+Elapsed time:29135 ms.
 --------------------------------------------
 
 /** MASS Program **/
