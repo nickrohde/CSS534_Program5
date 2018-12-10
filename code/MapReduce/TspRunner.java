@@ -15,9 +15,9 @@ import org.apache.hadoop.filecache.DistributedCache;
 
 public class TspRunner {    
     public static void main(String[] args) throws Exception {
-		if(args.length != 2) {
+		if(args.length != 3) {
 			System.out.println("Wrong number of arguments specified.");
-			System.out.println("Correct: <input> <output>");
+			System.out.println("Correct: <no. of iterations> <input> <output>");
 			System.exit(-1);
 		}
 
@@ -31,13 +31,17 @@ public class TspRunner {
 		conf.setCombinerClass(Reduce.class);
 		conf.setReducerClass(Reduce.class);
 		
+		conf.setNumMapTasks(4);
+
 		conf.setInputFormat(TextInputFormat.class);
 		conf.setOutputFormat(TextOutputFormat.class);
 
 		DistributedCache.addFileToClassPath(new Path("/user/anjald_css534/jars/commons-math3-3.6.1.jar"), conf);
 		
-		FileInputFormat.setInputPaths(conf, new Path(args[0]));
-		FileOutputFormat.setOutputPath(conf, new Path(args[1]));
+		FileInputFormat.setInputPaths(conf, new Path(args[1]));
+		FileOutputFormat.setOutputPath(conf, new Path(args[2]));
+
+		conf.set( "iterations", args[0] ); //pass the number of iterations to map
 
 		long startTime = System.currentTimeMillis();
 
@@ -57,11 +61,16 @@ public class TspRunner {
 		private RandomGenerator mt19937 = new MersenneTwister(60L);         // random engine
 		private RandomDataGenerator rng = new RandomDataGenerator(mt19937);
 
+		JobConf conf;
+		public void configure( JobConf job ) {
+ 			this.conf = job;
+		}
+
 		private static Solution simulated_annealing(Graph g, int n, RandomDataGenerator rng){
 			double heat = INITIAL_HEAT;                 // entropy of the system
 			int step = 2;                               // annealing step counter
 			Solution x_best = new Solution();           // best solution ever seen
-			x_best.init(g);
+			x_best.init(g);								// init solution with input graph
 			Solution candidate = new Solution(x_best);  // current candidate solution
 
 			// annealing stops once system cools down
@@ -117,22 +126,33 @@ public class TspRunner {
 		}
 
 		public void map(LongWritable key, Text value, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
+			//get the number of iterations to ber performed for SA
+			int n = Integer.parseInt(conf.get("iterations"));
+
+			//create a graph of all city coordinate pairs from the input file
 			Graph g = new Graph(value.toString());
-			Solution x = simulated_annealing(g, 100000, rng);
+
+			//run simmulated annealing on the input graph on each mapper and generate the best solution
+			Solution x = simulated_annealing(g, n, rng);
+
+			//assign the same key to each map output and collect the <key, value> output 
 			output.collect(new Text(one.toString()), new Text(x.toString()));
 		}
     }
 	 
     public static class Reduce extends MapReduceBase implements Reducer<Text, Text, Text, Text> {
+		//create a pattern to find the distance value from the solution
 		private Pattern p = Pattern.compile("(?<=distance: )\\d*.*");
 
 		public void reduce(Text key, Iterator<Text> values, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
+			//select the first reducer input and set it as the best solution
 			String found_best = values.next().toString();
 			Matcher dist_match = p.matcher(found_best);
 			boolean found = dist_match.find();
 			float min = Float.parseFloat(dist_match.group(0));
 			String temp = found_best;
 
+			//iterate through all the outputs and select the one with minimum distance
 			while(values.hasNext()){
 				temp = values.next().toString();
 				dist_match = p.matcher(temp);
@@ -143,6 +163,7 @@ public class TspRunner {
 				}
 			}
 
+			//collect the best solution
 			output.collect(new Text("Best Solution Found:"), new Text(found_best));
 		}
 	}
