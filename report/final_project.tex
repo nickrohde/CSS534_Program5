@@ -77,72 +77,128 @@
 			\begin{figure}\label{F1}
 				\caption{Program Flow of the MPI Implementation.}
 				\centering
-				\includegraphics[scale=0.75]{mpi_flow.png}
+				\includegraphics[scale=0.65]{mpi_flow.png}
 			\end{figure}
 		
 		\subsection{MapReduce} \label{D_MR}
-		
+		    Our MapReduce implementation spread out computation over multiple nodes using multiple mappers where each mapper runs its own SA. \hyperref[F2]{Figure 2} shows a flow diagram of our design. \\
+			
+			Each mapper receives a line from the cities file. Each line consists of all the city coordinate pairs. The map function then generates a solution from the input file and sets it as the initial best solution. This initial Solution is used as the input to the SA algorithm. After generating their respective best solution, each mapper collects the output with the $\langle1, Best-Solution\rangle$ as the $\langle key, value\rangle$ pair. Each mapper assigns the same key to their solution so that only a single reducer is created. This is so that, the reducer collects the output from all the solution and then selects the solution with the best distance. The output of the reducer is the best solution from all the mappers and is then stored in the output directory.
+			
+			\begin{figure}\label{F2}
+				\caption{Program Flow of the MapReduce Implementation.}
+				\centering
+				\includegraphics[scale=0.6]{mapreduce_flow.png}
+			\end{figure}
 		
 		\subsection{Spark} \label{D_SPARK}
 		
 		
 		\subsection{MASS} \label{D_MASS}
+			Our MASS implementation spread out computation over multiple nodes by running SA on each place individually. \\
+			
+			Each place received a different random seed, to ensure they did not follow the same path, and a different starting point. At the conclusion of each outer-loop iteration, all places outputs their current best solution, and all places then adopted the best solution from the list of current best solution of each place. This was done to prevent having places follow a dead-end path and keep all places searching an area of the search space known to contain good solutions. This can also lead to premature convergence, however, this was the only feasible option we could think of that did not destroy the performance by introducing an immense amount of communication. \\
+			
+			Another change that was made to the sequential version is that we divided the number of inner loop iterations over the number of places, i.e. if we ran SA for 100 inner loop iterations over 4 places, each node would only run 25 iterations. This approach is feasible as long as the number of inner loop iterations is sufficiently large. MASS automatically handles the number of places assigned to each node. So we created the number of places equal to the number of nodes running at the time.
 
-
+\pagebreak
 	
 	\section{Analysis} \label{ANALYSIS}
 
-
-		\begin{minipage}{\linewidth}
-			\centering
-			\captionof{table}{Comparison of Computation for MPI, Spark, MapReduce, and MASS} 
-			\begin{tabular}{c|cc}\label{T1}
-				Version 	& Execution Time (s)$^{\dagger}$ 	& Performance Improvement\\
-				\hline
-				Sequential	& 11.409							& N/A	\\
-				MPI Java	&  7.231							& 1.578	\\
-				MapReduce	& TODO								& TODO	\\
-				Spark		& 41.378							& 0.276	\\
-				MASS		& TODO								& TODO	\\
-				\noalign{\smallskip}\hline\noalign{\smallskip}
-				\multicolumn{3}{l}{\tiny $^\dagger$ Time of the best performing configuration of the given SA version.}
-			\end{tabular}
-			\smallskip\smallskip\smallskip\smallskip
-		\end{minipage}
-
-		\begin{minipage}{\linewidth}
-			\centering
-			\captionof{table}{Comparison of Computation for MPI} 
-			\begin{tabular}{c|cc}\label{T1}
-				\# Nodes & Average Execution Time (s)$^{\dagger}$ 	& Performance Improvement	\\
-				\hline
-				1		& 32.8419									& N/A	\\
-				2		& 16.0231									& 2.050	\\
-				4		&  7.2312									& 4.542	\\
-			\noalign{\smallskip}\hline\noalign{\smallskip}
-			\multicolumn{3}{l}{\tiny $^\dagger$ Average over 100 trials}
-			\end{tabular}
-		\smallskip\smallskip\smallskip\smallskip
-		\end{minipage}
-
-		\begin{minipage}{\linewidth}
-			\centering
-			\captionof{table}{Comparison of Computation for Spark} 
-			\begin{tabular}{c|c|cc}\label{T2}
-				\# Nodes 	& \#Cores 	& Execution Time 	& Performance Improvement	\\
-				\hline
-				1			& 1 		& 160.843			& N/A	\\
-				1			& 2 		& 113.404			& 1.418	\\
-				1			& 3 		& 77.057			& 2.087	\\
-				2			& 2 		& 92.786			& 1.733	\\
-				2			& 4 		& 60.676			& 2.650	\\
-				2			& 6 		& 45.464			& 3.537	\\
-				4			& 4 		& 68.041			& 2.363	\\
-				4			& 8 		& 41.378			& \color{red}3.887	\\
-				4			& 12 		& 45.328			& 3.548	\\
-			\end{tabular}
-		\smallskip\smallskip\smallskip\smallskip
-		\end{minipage}
+        \subsection{Perfromance} \label{PERF}
+            
+            \begin{figure}[!htb] \label{F3}
+				\caption{Comparison of Computation for MPI, Spark, MapReduce, and MASS}
+				\centering
+				\includegraphics[scale=0.45]{performance_graph.png}
+			\end{figure}
+			
+    		\begin{minipage}{\linewidth}
+    			\centering
+    			\captionof{table}{Comparison of Computation for MPI, Spark, MapReduce, and MASS} 
+    			\begin{tabular}{c|cc}\label{T1}
+    				Version 	& Execution Time (s)$^{\dagger}$ 	& Performance Improvement\\
+    				\hline
+    				Sequential	& 11.409							& N/A	\\
+    				MPI Java	&  7.231							& 1.578	\\
+    				MapReduce	& 41.616							& 0.274	\\
+    				Spark		& 41.378							& 0.276	\\
+    				MASS		& 35.003							& 0.326	\\
+    				\noalign{\smallskip}\hline\noalign{\smallskip}
+    				\multicolumn{3}{l}{\tiny $^\dagger$ Time of the best performing configuration of the given SA version.}
+    			\end{tabular}
+    			\smallskip\smallskip\smallskip\smallskip
+    		\end{minipage}
+        
+            \subsubsection{MPI JAVA} \label{PER_MPI}
+        		\begin{minipage}{\linewidth}
+        			\centering
+        			\captionof{table}{Comparison of Computation for MPI} 
+        			\begin{tabular}{c|cc}\label{T2}
+        				\# Nodes & Average Execution Time (s)$^{\dagger}$ 	& Performance Improvement	\\
+        				\hline
+        				1		& 32.8419									& N/A	\\
+        				2		& 16.0231									& 2.050	\\
+        				4		&  7.2312									& 4.542	\\
+        			\noalign{\smallskip}\hline\noalign{\smallskip}
+        			\multicolumn{3}{l}{\tiny $^\dagger$ Average over 100 trials}
+        			\end{tabular}
+        		\smallskip\smallskip\smallskip\smallskip
+        		\end{minipage}
+            
+            \subsubsection{MapReduce} \label{PER_MR}
+        		\begin{minipage}{\linewidth}
+                    \centering
+        			\captionof{table}{Comparison of Computation for MapReduce} 
+        			\begin{tabular}{c|cc}\label{T3}
+        				\# Nodes & Average Execution Time (s) & Performance Improvement\\
+        				\hline
+        				1	& 55.972	& N/A\\
+        				2	& 41.616	& 1.345\\
+        				4	& 44.423	& 1.256\\
+        			\noalign{\smallskip}\hline\noalign{\smallskip}
+        			\end{tabular}
+        		\smallskip\smallskip\smallskip\smallskip
+                \end{minipage}
+                
+                MapReduce is designed to work efficiently with Big Data. In our algorithm the input data is tiny. The main focus is the iterative computation of intermediate solution. Such algorithms are not not the best choice to be implemented in MapReduce. Which results in the performance to be significantly lower than the sequential version. One way the performance could be improved is by making the number of cities in the input file very large. This would definitely show better performance than the sequential version.
+            
+            \subsubsection{Spark} \label{PER_SPARK}
+        		\begin{minipage}{\linewidth}
+        			\centering
+        			\captionof{table}{Comparison of Computation for Spark} 
+        			\begin{tabular}{c|c|cc}\label{T4}
+        				\# Nodes 	& \#Cores 	& Execution Time 	& Performance Improvement	\\
+        				\hline
+        				1			& 1 		& 160.843			& N/A	\\
+        				1			& 2 		& 113.404			& 1.418	\\
+        				1			& 3 		& 77.057			& 2.087	\\
+        				2			& 2 		& 92.786			& 1.733	\\
+        				2			& 4 		& 60.676			& 2.650	\\
+        				2			& 6 		& 45.464			& 3.537	\\
+        				4			& 4 		& 68.041			& 2.363	\\
+        				4			& 8 		& 41.378			& \color{red}3.887	\\
+        				4			& 12 		& 45.328			& 3.548	\\
+        			\end{tabular}
+        		\smallskip\smallskip\smallskip\smallskip
+        		\end{minipage}
+    		
+    		\subsubsection{MASS} \label{PER_MASS}
+        		\begin{minipage}{\linewidth}
+                    \centering
+        			\captionof{table}{Comparison of Computation for MASS} 
+        			\begin{tabular}{c|cc}\label{T5}
+        				\# Nodes & Average Execution Time (s) & Performance Improvement\\
+        				\hline
+        				1	& 35.003	& N/A\\
+        				2	& 41.684	& 0.839\\
+        				4	& 58.490	& 0.598\\
+        			\noalign{\smallskip}\hline\noalign{\smallskip}
+        			\end{tabular}
+        		\smallskip\smallskip\smallskip\smallskip
+                \end{minipage}
+		
+		\subsection{Programability} \label{PROG}
 
 
 \pagebreak
@@ -296,8 +352,7 @@ public class Main {
 			
 	
 	\section{Output} \label{OUT}
-		This section provides the output generated by program 5 \#TODO\\
-		
+	
 		\subsection{Program 5} \label{P5_OUT}		
 			\begin{lstlisting}
 /** Sequential Program **/
@@ -315,6 +370,43 @@ Execution time: 7898 ms.
 -------------------------------------------
 
 /** MapReduce Program **/
+hadoop jar TspRunner.jar TspRunner 1000000 input output
+18/12/10 13:27:14 WARN mapred.JobClient: Use GenericOptionsParser for parsing the arguments. Applications should implement Tool for the same.
+18/12/10 13:27:14 INFO mapred.FileInputFormat: Total input paths to process : 1
+18/12/10 13:27:14 INFO mapred.JobClient: Running job: job_201812101217_0007
+18/12/10 13:27:15 INFO mapred.JobClient:  map 0% reduce 0%
+18/12/10 13:27:39 INFO mapred.JobClient:  map 75% reduce 0%
+18/12/10 13:27:45 INFO mapred.JobClient:  map 100% reduce 0%
+18/12/10 13:27:48 INFO mapred.JobClient:  map 100% reduce 16%
+18/12/10 13:27:54 INFO mapred.JobClient:  map 100% reduce 100%
+18/12/10 13:27:56 INFO mapred.JobClient: Job complete: job_201812101217_0007
+18/12/10 13:27:56 INFO mapred.JobClient: Counters: 19
+18/12/10 13:27:56 INFO mapred.JobClient:   Map-Reduce Framework
+18/12/10 13:27:56 INFO mapred.JobClient:     Combine output records=4
+18/12/10 13:27:56 INFO mapred.JobClient:     Spilled Records=8
+18/12/10 13:27:56 INFO mapred.JobClient:     Reduce input records=4
+18/12/10 13:27:56 INFO mapred.JobClient:     Reduce output records=1
+18/12/10 13:27:56 INFO mapred.JobClient:     Map input records=4
+18/12/10 13:27:56 INFO mapred.JobClient:     Map output records=4
+18/12/10 13:27:56 INFO mapred.JobClient:     Map output bytes=972
+18/12/10 13:27:56 INFO mapred.JobClient:     Reduce shuffle bytes=813
+18/12/10 13:27:56 INFO mapred.JobClient:     Combine input records=4
+18/12/10 13:27:56 INFO mapred.JobClient:     Map input bytes=814
+18/12/10 13:27:56 INFO mapred.JobClient:     Reduce input groups=1
+18/12/10 13:27:56 INFO mapred.JobClient:   FileSystemCounters
+18/12/10 13:27:56 INFO mapred.JobClient:     HDFS_BYTES_READ=2041
+18/12/10 13:27:56 INFO mapred.JobClient:     FILE_BYTES_WRITTEN=2278
+18/12/10 13:27:56 INFO mapred.JobClient:     FILE_BYTES_READ=1066
+18/12/10 13:27:56 INFO mapred.JobClient:     HDFS_BYTES_WRITTEN=261
+18/12/10 13:27:56 INFO mapred.JobClient:   Job Counters
+18/12/10 13:27:56 INFO mapred.JobClient:     Launched map tasks=4
+18/12/10 13:27:56 INFO mapred.JobClient:     Launched reduce tasks=1
+18/12/10 13:27:56 INFO mapred.JobClient:     Rack-local map tasks=1
+18/12/10 13:27:56 INFO mapred.JobClient:     Data-local map tasks=3
+Execution Time: 42553ms
+
+hadoop fs -cat /user/anjald_css534/output/part-00000
+Best Solution Found:    path: 21 -> 27 -> 24 -> 25 -> 7 -> 31 -> 2 -> 22 -> 18 -> 12 -> 15 -> 28 -> 26 -> 4 -> 20 -> 9 -> 32 -> 14 -> 8 -> 34 -> 30 -> 19 -> 13 -> 23 -> 6 -> 10 -> 35 -> 5 -> 0 -> 11 -> 33 -> 17 -> 29 -> 3 -> 1 -> 16 | distance: 447.38786463942176
 
 --------------------------------------------
 
@@ -329,6 +421,13 @@ Elapsed time:29135 ms.
 --------------------------------------------
 
 /** MASS Program **/
+java -jar prog5-1.0-SNAPSHOT.jar 2000000 cities.txt 4
+MProcess on v0243p.host.s.uw.edu run with command: java -Xmx9g -cp /home/anjald_css534/prog5/.jar edu.uw.bothell.css.dsl.MASS.MProcess v0243p.host.s.uw.edu 1 4 1 58136 /home/anjald_css534/prog5
+MProcess on v0244p.host.s.uw.edu run with command: java -Xmx9g -cp /home/anjald_css534/prog5/.jar edu.uw.bothell.css.dsl.MASS.MProcess v0244p.host.s.uw.edu 2 4 1 58136 /home/anjald_css534/prog5
+MProcess on v0245p.host.s.uw.edu run with command: java -Xmx9g -cp /home/anjald_css534/prog5/.jar edu.uw.bothell.css.dsl.MASS.MProcess v0245p.host.s.uw.edu 3 4 1 58136 /home/anjald_css534/prog5
+MASS.init: done
+Best Solution:path: 21 -> 27 -> 24 -> 25 -> 7 -> 20 -> 4 -> 26 -> 28 -> 31 -> 2 -> 22 -> 18 -> 12 -> 15 -> 16 -> 1 -> 3 -> 29 -> 17 -> 33 -> 11 -> 0 -> 5 -> 35 -> 10 -> 6 -> 23 -> 13 -> 19 -> 30 -> 34 -> 8 -> 14 -> 32 -> 9 | distance: 449.6584675618958
+Execution time = 57156 milliseconds
 
 
 			\end{lstlisting}	
