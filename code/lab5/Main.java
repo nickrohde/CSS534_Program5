@@ -97,12 +97,12 @@ public class Main {
 			
 		// find out where they live now
 		MASS.getLogger().debug( "Quickstart sending callAll to Agents..." );
-		calledAgentsResults = ( Object[] ) agents.callAll( Nomad.GET_HOSTNAME, agentsCallAllObjs );
+		calledAgentsResults = ( Object[] ) agents.callAll( AgentX.GET_HOSTNAME, agentsCallAllObjs );
 		MASS.getLogger().debug( "Agents callAll operation complete" );
 					
 		// find out where all of the Agents wound up when all movements complete
 		MASS.getLogger().debug( "Quickstart sending callAll to Agents to get final landing spot..." );
-		calledAgentsResults = ( Object[] ) agents.callAll(Nomad.GET_HOSTNAME, agentsCallAllObjs );
+		calledAgentsResults = ( Object[] ) agents.callAll(AgentX.GET_HOSTNAME, agentsCallAllObjs );
 		MASS.getLogger().debug( "Agents callAll operation complete" );
 		
 		// orderly shutdown
