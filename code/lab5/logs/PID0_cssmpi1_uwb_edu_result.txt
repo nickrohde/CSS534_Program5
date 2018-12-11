@@ -1,0 +1,423 @@
+16:49:17.809 [main] [DEBUG] Working directory set to /home/rohden_css534/prog5
+16:49:17.809 [main] [DEBUG] Hostname set to cssmpi1.uwb.edu
+16:49:17.809 [main] [DEBUG] MASSBase initialization complete
+16:49:17.810 [main] [DEBUG] Initialized threads - # 1
+16:49:17.810 [main] [DEBUG] MASS library initialized
+16:49:17.810 [main] [DEBUG] Quickstart creating Places...
+16:49:17.813 [main] [DEBUG] Places_base handle = 1, class = edu.uwb.css534.Coords, argument = 0, boundary_width = 0, size.length = 2
+16:49:17.813 [main] [DEBUG] init_all handle = 1, class = edu.uwb.css534.Coords, argument = 0
+16:49:17.813 [main] [DEBUG] Calculating stripe size, total number of Places is 100
+16:49:17.813 [main] [DEBUG] Calculating stripe size, system size (number of nodes) is 1
+16:49:17.816 [main] [DEBUG] PLACES_INITIALIZE sent to all remote nodes
+16:49:17.817 [main] [DEBUG] MASS_base.setHosts: Adding host cssmpi1.uwb.edu
+16:49:17.818 [main] [DEBUG] MASS_base.setHosts: System size = 1
+16:49:17.820 [main] [DEBUG] bound to port 58309
+16:49:17.821 [main] [DEBUG] Places created
+16:49:17.821 [main] [DEBUG] Quickstart sending callAll to Places...
+16:49:17.821 [main] [DEBUG] callAll return object
+16:49:17.821 [main] [DEBUG] thread[0] callAll_return object functionId = 0, range[0] = 0 range[1] = 99, arguments.length = 100
+16:49:17.821 [main] [DEBUG] thread[0]: places[0] = Place: [0, 0]
+16:49:17.823 [main] [DEBUG] thread[0]: places[1] = Place: [0, 1]
+16:49:17.823 [main] [DEBUG] thread[0]: places[2] = Place: [0, 2]
+16:49:17.823 [main] [DEBUG] thread[0]: places[3] = Place: [0, 3]
+16:49:17.823 [main] [DEBUG] thread[0]: places[4] = Place: [0, 4]
+16:49:17.823 [main] [DEBUG] thread[0]: places[5] = Place: [0, 5]
+16:49:17.823 [main] [DEBUG] thread[0]: places[6] = Place: [0, 6]
+16:49:17.823 [main] [DEBUG] thread[0]: places[7] = Place: [0, 7]
+16:49:17.823 [main] [DEBUG] thread[0]: places[8] = Place: [0, 8]
+16:49:17.823 [main] [DEBUG] thread[0]: places[9] = Place: [0, 9]
+16:49:17.823 [main] [DEBUG] thread[0]: places[10] = Place: [1, 0]
+16:49:17.824 [main] [DEBUG] thread[0]: places[11] = Place: [1, 1]
+16:49:17.824 [main] [DEBUG] thread[0]: places[12] = Place: [1, 2]
+16:49:17.824 [main] [DEBUG] thread[0]: places[13] = Place: [1, 3]
+16:49:17.824 [main] [DEBUG] thread[0]: places[14] = Place: [1, 4]
+16:49:17.824 [main] [DEBUG] thread[0]: places[15] = Place: [1, 5]
+16:49:17.824 [main] [DEBUG] thread[0]: places[16] = Place: [1, 6]
+16:49:17.824 [main] [DEBUG] thread[0]: places[17] = Place: [1, 7]
+16:49:17.824 [main] [DEBUG] thread[0]: places[18] = Place: [1, 8]
+16:49:17.824 [main] [DEBUG] thread[0]: places[19] = Place: [1, 9]
+16:49:17.824 [main] [DEBUG] thread[0]: places[20] = Place: [2, 0]
+16:49:17.824 [main] [DEBUG] thread[0]: places[21] = Place: [2, 1]
+16:49:17.825 [main] [DEBUG] thread[0]: places[22] = Place: [2, 2]
+16:49:17.825 [main] [DEBUG] thread[0]: places[23] = Place: [2, 3]
+16:49:17.825 [main] [DEBUG] thread[0]: places[24] = Place: [2, 4]
+16:49:17.825 [main] [DEBUG] thread[0]: places[25] = Place: [2, 5]
+16:49:17.825 [main] [DEBUG] thread[0]: places[26] = Place: [2, 6]
+16:49:17.825 [main] [DEBUG] thread[0]: places[27] = Place: [2, 7]
+16:49:17.825 [main] [DEBUG] thread[0]: places[28] = Place: [2, 8]
+16:49:17.825 [main] [DEBUG] thread[0]: places[29] = Place: [2, 9]
+16:49:17.825 [main] [DEBUG] thread[0]: places[30] = Place: [3, 0]
+16:49:17.825 [main] [DEBUG] thread[0]: places[31] = Place: [3, 1]
+16:49:17.825 [main] [DEBUG] thread[0]: places[32] = Place: [3, 2]
+16:49:17.826 [main] [DEBUG] thread[0]: places[33] = Place: [3, 3]
+16:49:17.826 [main] [DEBUG] thread[0]: places[34] = Place: [3, 4]
+16:49:17.826 [main] [DEBUG] thread[0]: places[35] = Place: [3, 5]
+16:49:17.826 [main] [DEBUG] thread[0]: places[36] = Place: [3, 6]
+16:49:17.826 [main] [DEBUG] thread[0]: places[37] = Place: [3, 7]
+16:49:17.826 [main] [DEBUG] thread[0]: places[38] = Place: [3, 8]
+16:49:17.829 [main] [DEBUG] thread[0]: places[39] = Place: [3, 9]
+16:49:17.829 [main] [DEBUG] thread[0]: places[40] = Place: [4, 0]
+16:49:17.829 [main] [DEBUG] thread[0]: places[41] = Place: [4, 1]
+16:49:17.829 [main] [DEBUG] thread[0]: places[42] = Place: [4, 2]
+16:49:17.829 [main] [DEBUG] thread[0]: places[43] = Place: [4, 3]
+16:49:17.829 [main] [DEBUG] thread[0]: places[44] = Place: [4, 4]
+16:49:17.829 [main] [DEBUG] thread[0]: places[45] = Place: [4, 5]
+16:49:17.830 [main] [DEBUG] thread[0]: places[46] = Place: [4, 6]
+16:49:17.830 [main] [DEBUG] thread[0]: places[47] = Place: [4, 7]
+16:49:17.830 [main] [DEBUG] thread[0]: places[48] = Place: [4, 8]
+16:49:17.830 [main] [DEBUG] thread[0]: places[49] = Place: [4, 9]
+16:49:17.830 [main] [DEBUG] thread[0]: places[50] = Place: [5, 0]
+16:49:17.830 [main] [DEBUG] thread[0]: places[51] = Place: [5, 1]
+16:49:17.830 [main] [DEBUG] thread[0]: places[52] = Place: [5, 2]
+16:49:17.830 [main] [DEBUG] thread[0]: places[53] = Place: [5, 3]
+16:49:17.830 [main] [DEBUG] thread[0]: places[54] = Place: [5, 4]
+16:49:17.830 [main] [DEBUG] thread[0]: places[55] = Place: [5, 5]
+16:49:17.830 [main] [DEBUG] thread[0]: places[56] = Place: [5, 6]
+16:49:17.830 [main] [DEBUG] thread[0]: places[57] = Place: [5, 7]
+16:49:17.831 [main] [DEBUG] thread[0]: places[58] = Place: [5, 8]
+16:49:17.831 [main] [DEBUG] thread[0]: places[59] = Place: [5, 9]
+16:49:17.831 [main] [DEBUG] thread[0]: places[60] = Place: [6, 0]
+16:49:17.831 [main] [DEBUG] thread[0]: places[61] = Place: [6, 1]
+16:49:17.831 [main] [DEBUG] thread[0]: places[62] = Place: [6, 2]
+16:49:17.831 [main] [DEBUG] thread[0]: places[63] = Place: [6, 3]
+16:49:17.831 [main] [DEBUG] thread[0]: places[64] = Place: [6, 4]
+16:49:17.831 [main] [DEBUG] thread[0]: places[65] = Place: [6, 5]
+16:49:17.831 [main] [DEBUG] thread[0]: places[66] = Place: [6, 6]
+16:49:17.831 [main] [DEBUG] thread[0]: places[67] = Place: [6, 7]
+16:49:17.831 [main] [DEBUG] thread[0]: places[68] = Place: [6, 8]
+16:49:17.831 [main] [DEBUG] thread[0]: places[69] = Place: [6, 9]
+16:49:17.832 [main] [DEBUG] thread[0]: places[70] = Place: [7, 0]
+16:49:17.832 [main] [DEBUG] thread[0]: places[71] = Place: [7, 1]
+16:49:17.832 [main] [DEBUG] thread[0]: places[72] = Place: [7, 2]
+16:49:17.832 [main] [DEBUG] thread[0]: places[73] = Place: [7, 3]
+16:49:17.832 [main] [DEBUG] thread[0]: places[74] = Place: [7, 4]
+16:49:17.832 [main] [DEBUG] thread[0]: places[75] = Place: [7, 5]
+16:49:17.832 [main] [DEBUG] thread[0]: places[76] = Place: [7, 6]
+16:49:17.832 [main] [DEBUG] thread[0]: places[77] = Place: [7, 7]
+16:49:17.832 [main] [DEBUG] thread[0]: places[78] = Place: [7, 8]
+16:49:17.832 [main] [DEBUG] thread[0]: places[79] = Place: [7, 9]
+16:49:17.832 [main] [DEBUG] thread[0]: places[80] = Place: [8, 0]
+16:49:17.832 [main] [DEBUG] thread[0]: places[81] = Place: [8, 1]
+16:49:17.833 [main] [DEBUG] thread[0]: places[82] = Place: [8, 2]
+16:49:17.833 [main] [DEBUG] thread[0]: places[83] = Place: [8, 3]
+16:49:17.833 [main] [DEBUG] thread[0]: places[84] = Place: [8, 4]
+16:49:17.833 [main] [DEBUG] thread[0]: places[85] = Place: [8, 5]
+16:49:17.833 [main] [DEBUG] thread[0]: places[86] = Place: [8, 6]
+16:49:17.833 [main] [DEBUG] thread[0]: places[87] = Place: [8, 7]
+16:49:17.833 [main] [DEBUG] thread[0]: places[88] = Place: [8, 8]
+16:49:17.833 [main] [DEBUG] thread[0]: places[89] = Place: [8, 9]
+16:49:17.833 [main] [DEBUG] thread[0]: places[90] = Place: [9, 0]
+16:49:17.833 [main] [DEBUG] thread[0]: places[91] = Place: [9, 1]
+16:49:17.833 [main] [DEBUG] thread[0]: places[92] = Place: [9, 2]
+16:49:17.834 [main] [DEBUG] thread[0]: places[93] = Place: [9, 3]
+16:49:17.834 [main] [DEBUG] thread[0]: places[94] = Place: [9, 4]
+16:49:17.834 [main] [DEBUG] thread[0]: places[95] = Place: [9, 5]
+16:49:17.834 [main] [DEBUG] thread[0]: places[96] = Place: [9, 6]
+16:49:17.834 [main] [DEBUG] thread[0]: places[97] = Place: [9, 7]
+16:49:17.834 [main] [DEBUG] thread[0]: places[98] = Place: [9, 8]
+16:49:17.834 [main] [DEBUG] thread[0]: places[99] = Place: [9, 9]
+16:49:17.834 [main] [DEBUG] tid[0] woke up all: barrier = 0
+16:49:17.834 [main] [DEBUG] Attempting to notifyAll...
+16:49:17.834 [main] [DEBUG] notifyAll success!
+16:49:17.834 [main] [DEBUG] Attempting to barrierAllSlaves...
+16:49:17.834 [main] [DEBUG] barrierAllSlaves completed!
+16:49:17.834 [main] [DEBUG] Places callAll operation complete
+16:49:17.834 [main] [DEBUG] Quickstart creating Agents...
+16:49:17.838 [main] [DEBUG] handle = 1,placesHandle = 1, class = edu.uwb.css534.AgentX, argument = null, initPopulation = 10
+16:49:17.843 [main] [DEBUG] Agents created
+16:49:17.843 [main] [DEBUG] Quickstart sending callAll to Agents...
+16:49:17.846 [main] [DEBUG] rank[10]'s local agent population = 
+16:49:17.846 [main] [DEBUG] MASS_base.currentAgents = edu.uw.bothell.css.dsl.MASS.Agents@51c8530f
+16:49:17.846 [main] [DEBUG] Starting index value is: 10
+16:49:17.846 [main] [DEBUG] Thread[0]: agent(10) assigned
+16:49:17.846 [main] [DEBUG] Thread [0]: (10) has called its method; 
+16:49:17.846 [main] [DEBUG] Starting index value is: 9
+16:49:17.846 [main] [DEBUG] Thread[0]: agent(9) assigned
+16:49:17.847 [main] [DEBUG] Thread [0]: (9) has called its method; 
+16:49:17.847 [main] [DEBUG] Starting index value is: 8
+16:49:17.847 [main] [DEBUG] Thread[0]: agent(8) assigned
+16:49:17.847 [main] [DEBUG] Thread [0]: (8) has called its method; 
+16:49:17.847 [main] [DEBUG] Starting index value is: 7
+16:49:17.847 [main] [DEBUG] Thread[0]: agent(7) assigned
+16:49:17.847 [main] [DEBUG] Thread [0]: (7) has called its method; 
+16:49:17.847 [main] [DEBUG] Starting index value is: 6
+16:49:17.847 [main] [DEBUG] Thread[0]: agent(6) assigned
+16:49:17.847 [main] [DEBUG] Thread [0]: (6) has called its method; 
+16:49:17.847 [main] [DEBUG] Starting index value is: 5
+16:49:17.847 [main] [DEBUG] Thread[0]: agent(5) assigned
+16:49:17.847 [main] [DEBUG] Thread [0]: (5) has called its method; 
+16:49:17.847 [main] [DEBUG] Starting index value is: 4
+16:49:17.847 [main] [DEBUG] Thread[0]: agent(4) assigned
+16:49:17.847 [main] [DEBUG] Thread [0]: (4) has called its method; 
+16:49:17.847 [main] [DEBUG] Starting index value is: 3
+16:49:17.847 [main] [DEBUG] Thread[0]: agent(3) assigned
+16:49:17.847 [main] [DEBUG] Thread [0]: (3) has called its method; 
+16:49:17.848 [main] [DEBUG] Starting index value is: 2
+16:49:17.848 [main] [DEBUG] Thread[0]: agent(2) assigned
+16:49:17.848 [main] [DEBUG] Thread [0]: (2) has called its method; 
+16:49:17.848 [main] [DEBUG] Starting index value is: 1
+16:49:17.848 [main] [DEBUG] Thread[0]: agent(1) assigned
+16:49:17.848 [main] [DEBUG] Thread [0]: (1) has called its method; 
+16:49:17.848 [main] [DEBUG] Starting index value is: 0
+16:49:17.848 [main] [DEBUG] Thread[0]: agent(0) assigned
+16:49:17.848 [main] [DEBUG] tid[0] woke up all: barrier = 1
+16:49:17.848 [main] [DEBUG] Attempting to notifyAll...
+16:49:17.848 [main] [DEBUG] notifyAll success!
+16:49:17.848 [main] [DEBUG] Agents_base:callAll: agents.size = 10
+16:49:17.848 [main] [DEBUG] Agents_base:callAll: agentsBagSize = 10
+16:49:17.848 [main] [DEBUG] tid[0] woke up all: barrier = 2
+16:49:17.848 [main] [DEBUG] Attempting to notifyAll...
+16:49:17.848 [main] [DEBUG] notifyAll success!
+16:49:17.848 [main] [DEBUG] Agents callAll operation complete
+16:49:17.848 [main] [DEBUG] Quickstart instructs all Agents to migrate...
+16:49:17.848 [main] [DEBUG] MASS_base.currentAgents = edu.uw.bothell.css.dsl.MASS.Agents@51c8530f
+16:49:17.848 [main] [DEBUG] Starting index value is: 10
+16:49:17.848 [main] [DEBUG] Thread[0]: agent(10) assigned
+16:49:17.848 [main] [DEBUG] Thread [0]: agent(edu.uwb.css534.AgentX@569cfc36)[10] was removed 
+16:49:17.848 [main] [DEBUG] fId = 1 argument null
+16:49:17.848 [main] [DEBUG] Thread [0]: (10) has called its method; Current Agent Bag Size is: 9
+16:49:17.849 [main] [DEBUG] Starting index value is: 9
+16:49:17.849 [main] [DEBUG] Thread[0]: agent(9) assigned
+16:49:17.849 [main] [DEBUG] Thread [0]: agent(edu.uwb.css534.AgentX@3ecd23d9)[9] was removed 
+16:49:17.849 [main] [DEBUG] fId = 1 argument null
+16:49:17.849 [main] [DEBUG] Thread [0]: (9) has called its method; Current Agent Bag Size is: 8
+16:49:17.849 [main] [DEBUG] Starting index value is: 8
+16:49:17.849 [main] [DEBUG] Thread[0]: agent(8) assigned
+16:49:17.849 [main] [DEBUG] Thread [0]: agent(edu.uwb.css534.AgentX@192d3247)[8] was removed 
+16:49:17.849 [main] [DEBUG] fId = 1 argument null
+16:49:17.849 [main] [DEBUG] Thread [0]: (8) has called its method; Current Agent Bag Size is: 7
+16:49:17.849 [main] [DEBUG] Starting index value is: 7
+16:49:17.849 [main] [DEBUG] Thread[0]: agent(7) assigned
+16:49:17.849 [main] [DEBUG] Thread [0]: agent(edu.uwb.css534.AgentX@7cbd213e)[7] was removed 
+16:49:17.849 [main] [DEBUG] fId = 1 argument null
+16:49:17.849 [main] [DEBUG] Thread [0]: (7) has called its method; Current Agent Bag Size is: 6
+16:49:17.849 [main] [DEBUG] Starting index value is: 6
+16:49:17.849 [main] [DEBUG] Thread[0]: agent(6) assigned
+16:49:17.849 [main] [DEBUG] Thread [0]: agent(edu.uwb.css534.AgentX@52f759d7)[6] was removed 
+16:49:17.849 [main] [DEBUG] fId = 1 argument null
+16:49:17.849 [main] [DEBUG] Thread [0]: (6) has called its method; Current Agent Bag Size is: 5
+16:49:17.849 [main] [DEBUG] Starting index value is: 5
+16:49:17.849 [main] [DEBUG] Thread[0]: agent(5) assigned
+16:49:17.849 [main] [DEBUG] Thread [0]: agent(edu.uwb.css534.AgentX@42eca56e)[5] was removed 
+16:49:17.849 [main] [DEBUG] fId = 1 argument null
+16:49:17.849 [main] [DEBUG] Thread [0]: (5) has called its method; Current Agent Bag Size is: 4
+16:49:17.849 [main] [DEBUG] Starting index value is: 4
+16:49:17.849 [main] [DEBUG] Thread[0]: agent(4) assigned
+16:49:17.849 [main] [DEBUG] Thread [0]: agent(edu.uwb.css534.AgentX@b7dd107)[4] was removed 
+16:49:17.849 [main] [DEBUG] fId = 1 argument null
+16:49:17.849 [main] [DEBUG] Thread [0]: (4) has called its method; Current Agent Bag Size is: 3
+16:49:17.849 [main] [DEBUG] Starting index value is: 3
+16:49:17.849 [main] [DEBUG] Thread[0]: agent(3) assigned
+16:49:17.849 [main] [DEBUG] Thread [0]: agent(edu.uwb.css534.AgentX@6950e31)[3] was removed 
+16:49:17.849 [main] [DEBUG] fId = 1 argument null
+16:49:17.849 [main] [DEBUG] Thread [0]: (3) has called its method; Current Agent Bag Size is: 2
+16:49:17.849 [main] [DEBUG] Starting index value is: 2
+16:49:17.850 [main] [DEBUG] Thread[0]: agent(2) assigned
+16:49:17.850 [main] [DEBUG] Thread [0]: agent(edu.uwb.css534.AgentX@2db7a79b)[2] was removed 
+16:49:17.850 [main] [DEBUG] fId = 1 argument null
+16:49:17.850 [main] [DEBUG] Thread [0]: (2) has called its method; Current Agent Bag Size is: 1
+16:49:17.850 [main] [DEBUG] Starting index value is: 1
+16:49:17.850 [main] [DEBUG] Thread[0]: agent(1) assigned
+16:49:17.850 [main] [DEBUG] Thread [0]: agent(edu.uwb.css534.AgentX@4671e53b)[1] was removed 
+16:49:17.850 [main] [DEBUG] fId = 1 argument null
+16:49:17.850 [main] [DEBUG] Thread [0]: (1) has called its method; Current Agent Bag Size is: 0
+16:49:17.850 [main] [DEBUG] Starting index value is: 0
+16:49:17.850 [main] [DEBUG] Thread[0]: agent(0) assigned
+16:49:17.850 [main] [DEBUG] tid[0] woke up all: barrier = 3
+16:49:17.850 [main] [DEBUG] Attempting to notifyAll...
+16:49:17.850 [main] [DEBUG] notifyAll success!
+16:49:17.850 [main] [DEBUG] Agents_base:callAll: agents.size = 10
+16:49:17.850 [main] [DEBUG] Agents_base:callAll: agentsBagSize = 10
+16:49:17.850 [main] [DEBUG] tid[0] woke up all: barrier = 4
+16:49:17.850 [main] [DEBUG] Attempting to notifyAll...
+16:49:17.850 [main] [DEBUG] notifyAll success!
+16:49:17.850 [main] [DEBUG] Agent migration complete
+16:49:17.850 [main] [DEBUG] Quickstart sending manageAll to Agents...
+16:49:17.850 [main] [DEBUG] Agents_base.manageALL: Thread 0 picked up 9
+16:49:17.850 [main] [DEBUG] agent 9's childrenCounter = 0
+16:49:17.850 [main] [DEBUG] Agent_base.manageALL: Thread 0 check 9's alive = true
+16:49:17.850 [main] [DEBUG] pthread_self[Thread[main,5,main]tid[0]: calls from[0].. (destCoord[0]..)
+16:49:17.850 [main] [DEBUG]  linear = 9 lower = 0 upper = 99)
+16:49:17.850 [main] [DEBUG] evaluationAgent 9 was removed from the oldPlace[0]..
+16:49:17.850 [main] [DEBUG] destinationLocalLinerIndex = 9
+16:49:17.850 [main] [DEBUG] evaluationAgent 9 was inserted into the destPlace[0]..
+16:49:17.850 [main] [DEBUG] Agents_base.manageALL: Thread 0 picked up 8
+16:49:17.850 [main] [DEBUG] agent 8's childrenCounter = 0
+16:49:17.850 [main] [DEBUG] Agent_base.manageALL: Thread 0 check 8's alive = true
+16:49:17.850 [main] [DEBUG] pthread_self[Thread[main,5,main]tid[0]: calls from[0].. (destCoord[0]..)
+16:49:17.851 [main] [DEBUG]  linear = 8 lower = 0 upper = 99)
+16:49:17.851 [main] [DEBUG] evaluationAgent 8 was removed from the oldPlace[0]..
+16:49:17.851 [main] [DEBUG] destinationLocalLinerIndex = 8
+16:49:17.851 [main] [DEBUG] evaluationAgent 8 was inserted into the destPlace[0]..
+16:49:17.851 [main] [DEBUG] Agents_base.manageALL: Thread 0 picked up 7
+16:49:17.851 [main] [DEBUG] agent 7's childrenCounter = 0
+16:49:17.851 [main] [DEBUG] Agent_base.manageALL: Thread 0 check 7's alive = true
+16:49:17.851 [main] [DEBUG] pthread_self[Thread[main,5,main]tid[0]: calls from[0].. (destCoord[0]..)
+16:49:17.851 [main] [DEBUG]  linear = 7 lower = 0 upper = 99)
+16:49:17.851 [main] [DEBUG] evaluationAgent 7 was removed from the oldPlace[0]..
+16:49:17.851 [main] [DEBUG] destinationLocalLinerIndex = 7
+16:49:17.851 [main] [DEBUG] evaluationAgent 7 was inserted into the destPlace[0]..
+16:49:17.851 [main] [DEBUG] Agents_base.manageALL: Thread 0 picked up 6
+16:49:17.851 [main] [DEBUG] agent 6's childrenCounter = 0
+16:49:17.851 [main] [DEBUG] Agent_base.manageALL: Thread 0 check 6's alive = true
+16:49:17.851 [main] [DEBUG] pthread_self[Thread[main,5,main]tid[0]: calls from[2].. (destCoord[2]..)
+16:49:17.851 [main] [DEBUG]  linear = 28 lower = 0 upper = 99)
+16:49:17.851 [main] [DEBUG] evaluationAgent 6 was removed from the oldPlace[0]..
+16:49:17.851 [main] [DEBUG] destinationLocalLinerIndex = 28
+16:49:17.851 [main] [DEBUG] evaluationAgent 6 was inserted into the destPlace[2]..
+16:49:17.851 [main] [DEBUG] Agents_base.manageALL: Thread 0 picked up 5
+16:49:17.851 [main] [DEBUG] agent 5's childrenCounter = 0
+16:49:17.851 [main] [DEBUG] Agent_base.manageALL: Thread 0 check 5's alive = true
+16:49:17.851 [main] [DEBUG] pthread_self[Thread[main,5,main]tid[0]: calls from[2].. (destCoord[2]..)
+16:49:17.851 [main] [DEBUG]  linear = 26 lower = 0 upper = 99)
+16:49:17.851 [main] [DEBUG] evaluationAgent 5 was removed from the oldPlace[0]..
+16:49:17.851 [main] [DEBUG] destinationLocalLinerIndex = 26
+16:49:17.851 [main] [DEBUG] evaluationAgent 5 was inserted into the destPlace[2]..
+16:49:17.851 [main] [DEBUG] Agents_base.manageALL: Thread 0 picked up 4
+16:49:17.851 [main] [DEBUG] agent 4's childrenCounter = 0
+16:49:17.851 [main] [DEBUG] Agent_base.manageALL: Thread 0 check 4's alive = true
+16:49:17.851 [main] [DEBUG] pthread_self[Thread[main,5,main]tid[0]: calls from[2].. (destCoord[2]..)
+16:49:17.851 [main] [DEBUG]  linear = 24 lower = 0 upper = 99)
+16:49:17.852 [main] [DEBUG] evaluationAgent 4 was removed from the oldPlace[0]..
+16:49:17.852 [main] [DEBUG] destinationLocalLinerIndex = 24
+16:49:17.852 [main] [DEBUG] evaluationAgent 4 was inserted into the destPlace[2]..
+16:49:17.852 [main] [DEBUG] Agents_base.manageALL: Thread 0 picked up 3
+16:49:17.852 [main] [DEBUG] agent 3's childrenCounter = 0
+16:49:17.852 [main] [DEBUG] Agent_base.manageALL: Thread 0 check 3's alive = true
+16:49:17.852 [main] [DEBUG] pthread_self[Thread[main,5,main]tid[0]: calls from[2].. (destCoord[2]..)
+16:49:17.852 [main] [DEBUG]  linear = 22 lower = 0 upper = 99)
+16:49:17.852 [main] [DEBUG] evaluationAgent 3 was removed from the oldPlace[0]..
+16:49:17.852 [main] [DEBUG] destinationLocalLinerIndex = 22
+16:49:17.852 [main] [DEBUG] evaluationAgent 3 was inserted into the destPlace[2]..
+16:49:17.852 [main] [DEBUG] Agents_base.manageALL: Thread 0 picked up 2
+16:49:17.852 [main] [DEBUG] agent 2's childrenCounter = 0
+16:49:17.852 [main] [DEBUG] Agent_base.manageALL: Thread 0 check 2's alive = true
+16:49:17.852 [main] [DEBUG] pthread_self[Thread[main,5,main]tid[0]: calls from[2].. (destCoord[2]..)
+16:49:17.852 [main] [DEBUG]  linear = 20 lower = 0 upper = 99)
+16:49:17.852 [main] [DEBUG] evaluationAgent 2 was removed from the oldPlace[0]..
+16:49:17.852 [main] [DEBUG] destinationLocalLinerIndex = 20
+16:49:17.852 [main] [DEBUG] evaluationAgent 2 was inserted into the destPlace[2]..
+16:49:17.852 [main] [DEBUG] Agents_base.manageALL: Thread 0 picked up 1
+16:49:17.852 [main] [DEBUG] agent 1's childrenCounter = 0
+16:49:17.852 [main] [DEBUG] Agent_base.manageALL: Thread 0 check 1's alive = true
+16:49:17.852 [main] [DEBUG] pthread_self[Thread[main,5,main]tid[0]: calls from[0].. (destCoord[0]..)
+16:49:17.852 [main] [DEBUG]  linear = 1 lower = 0 upper = 99)
+16:49:17.852 [main] [DEBUG] evaluationAgent 1 was removed from the oldPlace[0]..
+16:49:17.852 [main] [DEBUG] destinationLocalLinerIndex = 1
+16:49:17.852 [main] [DEBUG] evaluationAgent 1 was inserted into the destPlace[0]..
+16:49:17.852 [main] [DEBUG] Agents_base.manageALL: Thread 0 picked up 0
+16:49:17.852 [main] [DEBUG] agent 0's childrenCounter = 0
+16:49:17.852 [main] [DEBUG] Agent_base.manageALL: Thread 0 check 0's alive = true
+16:49:17.852 [main] [DEBUG] pthread_self[Thread[main,5,main]tid[0]: calls from[0].. (destCoord[0]..)
+16:49:17.852 [main] [DEBUG]  linear = 0 lower = 0 upper = 99)
+16:49:17.852 [main] [DEBUG] evaluationAgent 0 was removed from the oldPlace[0]..
+16:49:17.852 [main] [DEBUG] destinationLocalLinerIndex = 0
+16:49:17.852 [main] [DEBUG] evaluationAgent 0 was inserted into the destPlace[0]..
+16:49:17.852 [main] [DEBUG] tid[0] woke up all: barrier = 5
+16:49:17.852 [main] [DEBUG] Attempting to notifyAll...
+16:49:17.852 [main] [DEBUG] notifyAll success!
+16:49:17.852 [main] [DEBUG] tid[0] woke up all: barrier = 6
+16:49:17.852 [main] [DEBUG] Attempting to notifyAll...
+16:49:17.852 [main] [DEBUG] notifyAll success!
+16:49:17.852 [main] [DEBUG] tid[0] now enters processAgentMigrationRequest
+16:49:17.853 [main] [DEBUG] Agents_base.manageAll will join processAgentMigrationRequest A thread[0] = null myPid = 0
+16:49:17.853 [main] [DEBUG] Agents_base.manageAll completed: localPopulation = 10
+16:49:17.853 [main] [DEBUG] tid[0] woke up all: barrier = 7
+16:49:17.853 [main] [DEBUG] Attempting to notifyAll...
+16:49:17.853 [main] [DEBUG] notifyAll success!
+16:49:17.853 [main] [DEBUG] Agents manageAll operation complete
+16:49:17.853 [main] [DEBUG] Quickstart sending callAll to Agents...
+16:49:17.853 [main] [DEBUG] rank[10]'s local agent population = 
+16:49:17.853 [main] [DEBUG] MASS_base.currentAgents = edu.uw.bothell.css.dsl.MASS.Agents@51c8530f
+16:49:17.853 [main] [DEBUG] Starting index value is: 10
+16:49:17.853 [main] [DEBUG] Thread[0]: agent(10) assigned
+16:49:17.853 [main] [DEBUG] Thread [0]: (10) has called its method; 
+16:49:17.853 [main] [DEBUG] Starting index value is: 9
+16:49:17.853 [main] [DEBUG] Thread[0]: agent(9) assigned
+16:49:17.853 [main] [DEBUG] Thread [0]: (9) has called its method; 
+16:49:17.853 [main] [DEBUG] Starting index value is: 8
+16:49:17.853 [main] [DEBUG] Thread[0]: agent(8) assigned
+16:49:17.853 [main] [DEBUG] Thread [0]: (8) has called its method; 
+16:49:17.854 [main] [DEBUG] Starting index value is: 7
+16:49:17.854 [main] [DEBUG] Thread[0]: agent(7) assigned
+16:49:17.854 [main] [DEBUG] Thread [0]: (7) has called its method; 
+16:49:17.854 [main] [DEBUG] Starting index value is: 6
+16:49:17.854 [main] [DEBUG] Thread[0]: agent(6) assigned
+16:49:17.854 [main] [DEBUG] Thread [0]: (6) has called its method; 
+16:49:17.854 [main] [DEBUG] Starting index value is: 5
+16:49:17.854 [main] [DEBUG] Thread[0]: agent(5) assigned
+16:49:17.854 [main] [DEBUG] Thread [0]: (5) has called its method; 
+16:49:17.854 [main] [DEBUG] Starting index value is: 4
+16:49:17.854 [main] [DEBUG] Thread[0]: agent(4) assigned
+16:49:17.854 [main] [DEBUG] Thread [0]: (4) has called its method; 
+16:49:17.854 [main] [DEBUG] Starting index value is: 3
+16:49:17.854 [main] [DEBUG] Thread[0]: agent(3) assigned
+16:49:17.854 [main] [DEBUG] Thread [0]: (3) has called its method; 
+16:49:17.854 [main] [DEBUG] Starting index value is: 2
+16:49:17.854 [main] [DEBUG] Thread[0]: agent(2) assigned
+16:49:17.854 [main] [DEBUG] Thread [0]: (2) has called its method; 
+16:49:17.854 [main] [DEBUG] Starting index value is: 1
+16:49:17.854 [main] [DEBUG] Thread[0]: agent(1) assigned
+16:49:17.854 [main] [DEBUG] Thread [0]: (1) has called its method; 
+16:49:17.854 [main] [DEBUG] Starting index value is: 0
+16:49:17.854 [main] [DEBUG] Thread[0]: agent(0) assigned
+16:49:17.854 [main] [DEBUG] tid[0] woke up all: barrier = 8
+16:49:17.854 [main] [DEBUG] Attempting to notifyAll...
+16:49:17.855 [main] [DEBUG] notifyAll success!
+16:49:17.855 [main] [DEBUG] Agents_base:callAll: agents.size = 10
+16:49:17.855 [main] [DEBUG] Agents_base:callAll: agentsBagSize = 10
+16:49:17.855 [main] [DEBUG] tid[0] woke up all: barrier = 9
+16:49:17.855 [main] [DEBUG] Attempting to notifyAll...
+16:49:17.855 [main] [DEBUG] notifyAll success!
+16:49:17.855 [main] [DEBUG] Agents callAll operation complete
+16:49:17.855 [main] [DEBUG] Quickstart sending callAll to Agents to get final landing spot...
+16:49:17.855 [main] [DEBUG] rank[10]'s local agent population = 
+16:49:17.855 [main] [DEBUG] MASS_base.currentAgents = edu.uw.bothell.css.dsl.MASS.Agents@51c8530f
+16:49:17.855 [main] [DEBUG] Starting index value is: 10
+16:49:17.855 [main] [DEBUG] Thread[0]: agent(10) assigned
+16:49:17.855 [main] [DEBUG] Thread [0]: (10) has called its method; 
+16:49:17.855 [main] [DEBUG] Starting index value is: 9
+16:49:17.855 [main] [DEBUG] Thread[0]: agent(9) assigned
+16:49:17.855 [main] [DEBUG] Thread [0]: (9) has called its method; 
+16:49:17.855 [main] [DEBUG] Starting index value is: 8
+16:49:17.855 [main] [DEBUG] Thread[0]: agent(8) assigned
+16:49:17.855 [main] [DEBUG] Thread [0]: (8) has called its method; 
+16:49:17.855 [main] [DEBUG] Starting index value is: 7
+16:49:17.855 [main] [DEBUG] Thread[0]: agent(7) assigned
+16:49:17.855 [main] [DEBUG] Thread [0]: (7) has called its method; 
+16:49:17.855 [main] [DEBUG] Starting index value is: 6
+16:49:17.855 [main] [DEBUG] Thread[0]: agent(6) assigned
+16:49:17.855 [main] [DEBUG] Thread [0]: (6) has called its method; 
+16:49:17.856 [main] [DEBUG] Starting index value is: 5
+16:49:17.856 [main] [DEBUG] Thread[0]: agent(5) assigned
+16:49:17.856 [main] [DEBUG] Thread [0]: (5) has called its method; 
+16:49:17.856 [main] [DEBUG] Starting index value is: 4
+16:49:17.856 [main] [DEBUG] Thread[0]: agent(4) assigned
+16:49:17.856 [main] [DEBUG] Thread [0]: (4) has called its method; 
+16:49:17.856 [main] [DEBUG] Starting index value is: 3
+16:49:17.856 [main] [DEBUG] Thread[0]: agent(3) assigned
+16:49:17.856 [main] [DEBUG] Thread [0]: (3) has called its method; 
+16:49:17.856 [main] [DEBUG] Starting index value is: 2
+16:49:17.856 [main] [DEBUG] Thread[0]: agent(2) assigned
+16:49:17.856 [main] [DEBUG] Thread [0]: (2) has called its method; 
+16:49:17.856 [main] [DEBUG] Starting index value is: 1
+16:49:17.856 [main] [DEBUG] Thread[0]: agent(1) assigned
+16:49:17.856 [main] [DEBUG] Thread [0]: (1) has called its method; 
+16:49:17.856 [main] [DEBUG] Starting index value is: 0
+16:49:17.856 [main] [DEBUG] Thread[0]: agent(0) assigned
+16:49:17.856 [main] [DEBUG] tid[0] woke up all: barrier = 10
+16:49:17.856 [main] [DEBUG] Attempting to notifyAll...
+16:49:17.856 [main] [DEBUG] notifyAll success!
+16:49:17.856 [main] [DEBUG] Agents_base:callAll: agents.size = 10
+16:49:17.856 [main] [DEBUG] Agents_base:callAll: agentsBagSize = 10
+16:49:17.856 [main] [DEBUG] tid[0] woke up all: barrier = 11
+16:49:17.856 [main] [DEBUG] Attempting to notifyAll...
+16:49:17.856 [main] [DEBUG] notifyAll success!
+16:49:17.856 [main] [DEBUG] Agents callAll operation complete
+16:49:17.856 [main] [DEBUG] Quickstart instructs MASS library to finish operations...
+16:49:17.856 [main] [DEBUG] tid[0] woke up all: barrier = 12
+16:49:17.856 [main] [DEBUG] Attempting to notifyAll...
+16:49:17.856 [main] [DEBUG] notifyAll success!
+16:49:17.856 [main] [DEBUG] MASS::finish: all MASS threads terminated
+16:49:17.856 [main] [DEBUG] MASS::finish: done
+16:49:17.856 [main] [DEBUG] MASS library has stopped
