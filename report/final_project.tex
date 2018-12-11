@@ -92,7 +92,30 @@
 			\end{figure}
 		
 		\subsection{Spark} \label{D_SPARK}
-		
+		The Spark version is acccepting additional input, number of partitions. The following steps illustrate execution process in Spark:
+		\begin{enumerate}
+		\item Generate initial solution randomly and broadcast.
+		\item Generate a list of 12 (maximum number of executors at the server) random-generators each with a different seed and broadcast once. Each executor uses its id to retrieve its generator; thus, each one guaranteed to generate different solutions.
+		\item Initialize RDD file:
+		\begin{itemize} 
+			\item Contain initial solution as many as the number of partitions.
+			\item Partition the RDD into the given number of partitions, each partition contains only one initial solution.
+		\end{itemize}
+		\item Starting the outer loop same as the sequential algorithm:
+		\begin{itemize} 
+			\item The inner loop uses map transformation to produce the best solution same as in sequential but the number of iterations (user input) is divided by the number of partitions.
+		    \item Apply reduce action to get the best solution among all partitions.
+		    \item Broadcast the best solution.
+		    \item Reduce the heat and repeat this step (\#4) until reaching the minimum heat.
+		\end{itemize}
+		\item Output the best solution.
+		\end{enumerate}
+
+		\begin{figure}\label{F1}
+			\caption{Program Flow of the Spark Implementation.}
+			\centering
+			\includegraphics[scale=0.45]{spark_flow_diagram.png}
+		\end{figure}
 		
 		\subsection{MASS} \label{D_MASS}
 			Our MASS implementation spread out computation over multiple nodes by running SA on each place individually. \\
