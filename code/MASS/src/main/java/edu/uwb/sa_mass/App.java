@@ -57,13 +57,14 @@ public class App {
 		int num_nodes = Integer.parseInt(args[2]);                          // time to wait during annealing steps for the system to stabilize
         Graph g = make_graph(args[1]);                              // input graph file
 
+		int num_places = num_nodes;
 		
 		// remember starting time
 		long startTime = new Date().getTime();
 		
 		// init MASS library
 		MASS.setNodeFilePath( NODE_FILE );
-		MASS.setLoggingLevel( LogLevel.DEBUG );
+		MASS.setLoggingLevel( LogLevel.ERROR );
 		
 		// start MASS
 		MASS.getLogger().debug( "SA initializing MASS library..." );
@@ -76,16 +77,41 @@ public class App {
 		 */
 	
 		MASS.getLogger().debug( "Quickstart creating Places..." );
-		Object[] arguments = new Object[] { g, n/num_nodes};
+		//Object[] arguments = new Object[] { g, n/num_nodes};
 		
-		Places places = new Places( 1, Annealing.class.getName(), arguments, num_nodes); // creating places
+		Places places = new Places( 1, Annealing.class.getName(), (Object) new Integer(n/num_nodes), num_places); // creating places
 		MASS.getLogger().debug( "Places created" );
+
+		Object[] placeCallAllObjs = new Object[num_places];
 
 		double heat = INITIAL_HEAT;
 		int step = 2;
+
+		Solution best = new Solution();
+		best.init(g);
+
 		while (heat > MIN_HEAT)
         {
-			
+			for(int i=0; i<placeCallAllObjs.length; i++){
+				Object[] placeArgHelper = new Object[2]; 
+				placeArgHelper[0] = (Object) best;
+				placeArgHelper[1] = (Object) new Double(heat);
+				placeCallAllObjs[i] = (Object) new Arg_Helper(placeArgHelper);
+			}
+
+			Object[] calledPlacesResults = (Object[]) places.callAll(Annealing.START_ANNEALING, placeCallAllObjs);
+
+			double best_energy = ((Solution) calledPlacesResults[0]).energy();
+			int best_index = 0;
+
+			for(int j=1; j<calledPlacesResults.length ; j++){
+				if( ((Solution) calledPlacesResults[j]).energy() < best_energy ){
+					best_index = j;
+					best_energy = ((Solution) calledPlacesResults[j]).energy();
+				}
+			}
+
+			best = new Solution( (Solution)calledPlacesResults[best_index] );
             // update system entropy and annealing step counter
             heat = temperature(heat, step);
             step += 1;
@@ -144,6 +170,8 @@ public class App {
 		
 		// calculate / display execution time
 		long execTime = new Date().getTime() - startTime;
+
+		System.out.println("Best Solution:" + best);
 		System.out.println( "Execution time = " + execTime + " milliseconds" );
 		
 	 }

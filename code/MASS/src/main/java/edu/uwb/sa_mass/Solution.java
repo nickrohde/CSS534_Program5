@@ -4,8 +4,9 @@ import org.apache.commons.math3.random.MersenneTwister;
 import org.apache.commons.math3.random.RandomGenerator;
 import org.apache.commons.math3.random.RandomDataGenerator;
 import java.text.DecimalFormat;
+import java.io.*;
 
-public class Solution
+public class Solution implements Serializable
 {
     // Static members:
     private RandomGenerator _mt19937;
