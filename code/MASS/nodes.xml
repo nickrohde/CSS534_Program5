@@ -18,21 +18,38 @@
 		
 		<!-- Hostname is required, and may either be an FQDN or IP address -->
 		<!-- Make sure the name/address specified is reachable by all other nodes -->
-		<hostname>0.0.0.0:0</hostname>
+		<hostname>cssmpi1.uwb.edu</hostname>
 		
+		<port>58136</port>
+   
 		<!-- Masshome is where MASS.jar and any other dependencies of your application reside -->
-		<masshome>/Users/Nasser/css/CSS534_Program5/code/MASS</masshome>
+		<masshome>/home/anjald_css534/prog5</masshome>
 
 	</node>
 
 	<!-- Connection to CSSMPI2 -->
-	<!--
 	<node>
 		<hostname>cssmpi2.uwb.edu</hostname>
-		<masshome>/home/david_lister/prog5</masshome>
-		<username>smeg_head</username>
+		<masshome>/home/anjald_css534/prog5</masshome>
+		<username>anjald_css534</username>
+    <port>58136</port>
 		<privatekey>~/.ssh/id_rsa</privatekey>
 	</node>
-	-->
+ 
+  <node>
+  	<hostname>cssmpi3.uwb.edu</hostname>
+  	<masshome>/home/anjald_css534/prog5</masshome>
+  	<username>anjald_css534</username>
+    <port>58136</port>
+  	<privatekey>~/.ssh/id_rsa</privatekey>
+  </node>
+  
+  <node>
+  	<hostname>cssmpi4.uwb.edu</hostname>
+  	<masshome>/home/anjald_css534/prog5</masshome>
+  	<username>anjald_css534</username>
+    <port>58136</port>
+  	<privatekey>~/.ssh/id_rsa</privatekey>
+  </node>
 
 </nodes>

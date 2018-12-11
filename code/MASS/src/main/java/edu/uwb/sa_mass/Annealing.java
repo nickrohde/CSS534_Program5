@@ -43,7 +43,7 @@ public class Annealing extends Place {
 	// public static final int GET_HOSTNAME = 0;
 	public static final int START_ANNEALING = 0;
 	private RandomDataGenerator rng;
-	private Solution candidate;
+	//private Solution candidate;
 	private int iterations = 0;
 
 	/**
@@ -52,24 +52,25 @@ public class Annealing extends Place {
 	 * 
 	 * @param obj
 	 */
-	public Annealing(Object[] args) {
+	public Annealing(Object args) {
 		RandomGenerator mt19937 = new MersenneTwister(60L * getIndex()[0]); // random engine
 		rng = new RandomDataGenerator(mt19937); // RNG used by annealing
-		candidate = new Solution(60L * getIndex()[0]);
-		candidate.init((Graph) args[0]);
+		// candidate = new Solution(60L * getIndex()[0]);
+		// candidate.init((Graph) args[0]);
 		// candidate = (Solution) initSolution;
-		this.iterations = (Integer) args[1];
+		this.iterations = (Integer) args;
 	}
 
 	/**
 	 * This method is called when "callAll" is invoked from the master node
 	 */
-	public Object callMethod(int method, Object[] o) {
+	public Object callMethod(int method, Object o) {
 
+		Arg_Helper args = (Arg_Helper) o;
 		switch (method) {
 
 		case START_ANNEALING:
-			return runAnnealingProcess((Solution) o[0], (Double) o[1]);
+			return runAnnealingProcess((Solution) args.args[0], (Double) args.args[1]);
 
 		default:
 			return new String("Unknown Method Number: " + method);
@@ -84,7 +85,7 @@ public class Annealing extends Place {
 	 * @param o
 	 * @return The hostname (as a String) where this Place is located
 	 */
-	public Object runAnnealingProcess(Solution o, double heat) {
+	public Object runAnnealingProcess(Solution candidate, double heat) {
 
 		try {
 			Solution best = candidate;

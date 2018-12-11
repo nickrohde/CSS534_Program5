@@ -1,8 +1,9 @@
 package edu.uwb.sa_mass;
 import java.lang.Math;
 import java.text.DecimalFormat;
+import java.io.*;
 
-public class Coordinate_Pair
+public class Coordinate_Pair implements Serializable
 {
     // Members:
     public double _x;
