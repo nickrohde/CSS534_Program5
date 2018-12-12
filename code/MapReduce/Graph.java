@@ -23,7 +23,7 @@ public class Graph
         for(int i=0; i<splitted_cities.length; i++)
         {
             String[] stuff = splitted_cities[i].split(",");
-            _city_locations.add(new Coordinate_Pair(Integer.parseInt(stuff[0]), Integer.parseInt(stuff[1])));
+            _city_locations.add(new Coordinate_Pair(Double.parseDouble(stuff[0]), Double.parseDouble(stuff[1])));
         } // end for
 
     } // end Constructor(FileReader)
