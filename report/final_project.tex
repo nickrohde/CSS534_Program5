@@ -70,9 +70,9 @@
 		\subsection{MPI Java} \label{D_MPI}
 			Our MPI Java implementation spread out computation over multiple MPI nodes by running SA on each node individually. \hyperref[F1]{Figure 1} shows a flow diagram of our design. \\
 			
-			Each node received a different random seed, to ensure they did not follow the same path, and a different starting point. At the conclusion of each outer-loop iteration, all MPI nodes exchanged their current best solution, and all nodes then adopted the best solution in the cluster. This was done to prevent having nodes follow a dead-end path and keep all nodes searching an area of the search space known to contain good solutions. This can also lead to premature convergence, however, this was the only feasible option we could think of that did not destroy the performance by introducing an immense amount of communication. \\
+			Each node received a different random seed to ensure they did not follow the same path and a different randomly generated starting point. At the conclusion of each outer-loop iteration, all MPI nodes exchange their current best solution and all nodes then adopt the best solution in the cluster. This was done to prevent having nodes follow a dead-end path and keep all nodes searching an area of the search space known to contain good solutions. This can also lead to premature convergence, however, this was the only feasible option we could think of that did not ruin the performance by introducing an immense amount of communication. \\
 			
-			Another change that was made to the sequential version is that we divided the number of inner loop iterations over the nodes, i.e. if we ran SA for 100 inner loop iterations over 4 nodes, each node would only run 25 iterations. This approach is feasible as long as the number of inner loop iterations is sufficiently large.
+			Furthermore, we divided the number of inner loop iterations over the MPI ranks, i.e. if we ran SA for 100 inner loop iterations over 4 ranks, each rank would only run 25 iterations. This approach is feasible as long as the number of inner loop iterations is sufficiently large. Otherwise it will lead to the algorithm's performance being reduced massively as the system cannot stabilize before the inner loop finishes.\\
 		
 			\begin{figure}\label{F1}
 				\caption{Program Flow of the MPI Implementation.}
@@ -81,9 +81,9 @@
 			\end{figure}
 		
 		\subsection{MapReduce} \label{D_MR}
-		    Our MapReduce implementation spread out computation over multiple nodes using multiple mappers where each mapper runs its own SA. \hyperref[F2]{Figure 2} shows a flow diagram of our design. \\
+		    MapReduce runs the SA algorithm solely in the Mapper. We considered another design where we took the outer loop into the Main function and repeatedly called MapReduce for the inner loop, however, this would have added too much overhead to be feasible. \hyperref[F2]{Figure 2} shows our final design of the MapReduce implementation. \\
 			
-			Each mapper receives a line from the cities file. Each line consists of all the city coordinate pairs. The map function then generates a solution from the input file and sets it as the initial best solution. This initial Solution is used as the input to the SA algorithm. After generating their respective best solution, each mapper collects the output with the $\langle1, Best-Solution\rangle$ as the $\langle key, value\rangle$ pair. Each mapper assigns the same key to their solution so that only a single reducer is created. This is so that, the reducer collects the output from all the solution and then selects the solution with the best distance. The output of the reducer is the best solution from all the mappers and is then stored in the output directory.
+			We designed the MapReduce algorithm much like the MPI algorithm. Each Mapper receives a line from the input file (each line contains the entire graph) and we control the number of Mapper spawned by MapReduce by adding the graph multiple times to the input file. The Mapper then runs the entire SA algorithm and sends its results to the Reducer. All mappers pass the same key to the Reducer to force all solutions to go to the same Reducer. The Reducer's job is to sift through all solutions and find the best one, which is then returned as the output. \\
 			
 			\begin{figure}\label{F2}
 				\caption{Program Flow of the MapReduce Implementation.}
@@ -92,45 +92,45 @@
 			\end{figure}
 		
 		\subsection{Spark} \label{D_SPARK}
-		The Spark version is acccepting additional input, number of partitions. The following steps illustrate execution process in Spark:
+		The Spark version accepts as additional input the number of partitions. The following steps illustrate the execution process of our Spark implementation:
 		\begin{enumerate}
-		\item Generate initial solution randomly and broadcast.
-		\item Generate a list of 12 (maximum number of executors at the server) random-generators each with a different seed and broadcast once. Each executor uses its id to retrieve its generator; thus, each one guaranteed to generate different solutions.
-		\item Initialize RDD file:
-		\begin{itemize} 
-			\item Contain initial solution as many as the number of partitions.
-			\item Partition the RDD into the given number of partitions, each partition contains only one initial solution.
-		\end{itemize}
-		\item Starting the outer loop same as the sequential algorithm:
-		\begin{itemize} 
-			\item The inner loop uses map transformation to produce the best solution same as in sequential but the number of iterations (user input) is divided by the number of partitions.
-		    \item Apply reduce action to get the best solution among all partitions.
-		    \item Broadcast the best solution.
-		    \item Reduce the heat and repeat this step (\#4) until reaching the minimum heat.
-		\end{itemize}
-		\item Output the best solution.
+			\item Generate a random initial solution and broadcast it.
+			\item Generate a list of 12 (maximum number of executors in the cluster) random number generators, each with a different seed, and broadcast them. Each executor uses its ID to retrieve its generator; thus, each one is extremely unlikely to generate the same solutions as another executor.
+			\item Initialize the RDD data structure:
+				\begin{itemize} 
+					\item Create an initial solution for each partition.
+					\item Partition the RDD into the given number of partitions, each containing a single solution.
+				\end{itemize}
+			\item Run the outer loop (identical to the sequential algorithm):
+				\begin{itemize} 
+					\item The inner loop uses a map transformation to produce the best solution and the number of iterations is split between the partitions.
+				    \item Reduce our solution pool to find the best solution among all partitions.
+				    \item Broadcast the best solution.
+				\end{itemize}
+			\item Output the best solution.
 		\end{enumerate}
 
-		\begin{figure}\label{F1}
+		\begin{figure}\label{F3}
 			\caption{Program Flow of the Spark Implementation.}
 			\centering
 			\includegraphics[scale=0.45]{spark_flow_diagram.png}
 		\end{figure}
 		
 		\subsection{MASS} \label{D_MASS}
-			Our MASS implementation spread out computation over multiple nodes by running SA on each place individually. \\
+			Our MASS implementation spread out computation over multiple nodes by creating a Places array where each place was executing the inner loop individually. \\
 			
-			Each place received a different random seed, to ensure they did not follow the same path, and a different starting point. At the conclusion of each outer-loop iteration, all places outputs their current best solution, and all places then adopted the best solution from the list of current best solution of each place. This was done to prevent having places follow a dead-end path and keep all places searching an area of the search space known to contain good solutions. This can also lead to premature convergence, however, this was the only feasible option we could think of that did not destroy the performance by introducing an immense amount of communication. \\
+			Each place received a different random seed to ensure they did not follow the same path and a different initial solution. At the conclusion of each outer-loop iteration, all places return their best solution and all these solutions are then filtered for the best overall solution. This solution is then sent to the Places as a starting point for the next iteration of the outer loop. Much like with the MPI version, we split the iterations up between the many MASS nodes, which carries the same drawback as mentioned previously.\\
 			
-			Another change that was made to the sequential version is that we divided the number of inner loop iterations over the number of places, i.e. if we ran SA for 100 inner loop iterations over 4 places, each node would only run 25 iterations. This approach is feasible as long as the number of inner loop iterations is sufficiently large. MASS automatically handles the number of places assigned to each node. So we created the number of places equal to the number of nodes running at the time.
+			On unique addition to the algorithm we made in MASS was that we created the number of places equal to the number of running MASS nodes. As MASS assigns each place to a node automatically, we were unable to control how these would be split up over the nodes and hoped that this would encourage MASS to give each node a place. \\
 
-\pagebreak
 	
 	\section{Analysis} \label{ANALYSIS}
-
         \subsection{Perfromance} \label{PERF}
+            In our performance evaluation we considered two scenarios; firstly, we used the input from program 1 with 36 cities scattered throughout the coordinate plane; the other scenario considered 500 equidistant points on a circle with radius 500, thus, all points were almost exactly 2$\pi$ units apart with an optimal trip length of approximately 3641.572 or $1000\pi + 500$, starting at the origin. The optimal trip that we found for the 36 cities was of length $\approx 447.388$, though we have no verification that this is in fact the optimal trip. Our 500 cities example was used as a larger control input with known optimal solution to allow us to analyze how well the different versions of our SA perform with larger input and how close they can get to the best solution.\\
             
-            \begin{figure}[!htb] \label{F3}
+            As we can see in \hyperref{T1}{Table 1}, in the 36-city scenario most of our parallel implementations did not manage to beat the sequential program; MPI being the only one with a better performance by a small margin. However, in our larger scenario we see our parallel versions pulling far ahead of the sequential version. The MPI version was able to vastly improve performance here, running almost four times faster than the sequential code. The same applies to MASS, which improved drastically from the 36-city scenario going from 0.326 times to 1.429 times faster execution than sequential. Most likely, MASS could perform better if we used an even larger graph, though we have not tested this; however, MASS's large amount of overhead appears to require a certain amount of minimum execution time to start seeing an improvement in the parallel version. \\
+            
+            \begin{figure}[!htb] \label{F4}
 				\caption{Comparison of Computation for MPI, Spark, MapReduce, and MASS}
 				\centering
 				\includegraphics[scale=0.45]{performance_graph.png}
@@ -139,14 +139,15 @@
     		\begin{minipage}{\linewidth}
     			\centering
     			\captionof{table}{Comparison of Computation for MPI, Spark, MapReduce, and MASS} 
-    			\begin{tabular}{c|cc}\label{T1}
-    				Version 	& Execution Time (s)$^{\dagger}$ 	& Performance Improvement\\
+    			\begin{tabular}{c|cc|cc}\label{T1}
+    				& \multicolumn{2}{c|}{36 Cities} & \multicolumn{2}{c}{500 Cities} \\
+    				Version & Execution Time (s)$^{\dagger}$ & Improvement 	& Execution Time (s) 	& Improvement\\
     				\hline
-    				Sequential	& 11.409							& N/A	\\
-    				MPI Java	&  7.231							& 1.578	\\
-    				MapReduce	& 41.616							& 0.274	\\
-    				Spark		& 22.422							& 0.509	\\
-    				MASS		& 35.003							& 0.326	\\
+    				Sequential	& 11.409	& N/A			& 157.222	& N/A	\\
+    				MPI Java 	&  7.231	& 1.578			&  39.627	& 3.968	\\
+    				MapReduce	& 41.616	& 0.274			& TODO		& TODO \\
+    				Spark		& 22.422	& 0.509			& TODO		& TODO \\
+    				MASS		& 35.003	& 0.326			& 109.998	& 1.429 \\
     				\noalign{\smallskip}\hline\noalign{\smallskip}
     				\multicolumn{3}{l}{\tiny $^\dagger$ Time of the best performing configuration of the given SA version.}
     			\end{tabular}
@@ -154,17 +155,19 @@
     		\end{minipage}
         
             \subsubsection{MPI JAVA} \label{PER_MPI}
-				Looking at \hyperref{T2}{Table 2}, we can see that our MPI program is performing very well in terms of performance scaling, in fact, we experience over 4.5 times execution time improvement when comparing a single vs four MPI nodes. When we look at \hyperref{T1}{Table 1}, we can see that MPI with four nodes is able to keep up with the sequential version of the algorithm, but not able to beat it by a large margin. One explanation for this is that the problem is not complex enough for the communication overhead to become negible. However, comparing MPI to the other three solutions, we can see a very different result. We believe that our tight control over communication in MPI is responsible for our MPI version performing so much better than the MapReduce, Spark, and MASS versions. As MPI conducts no communication unless specifically told by the programmer, we can ensure that we only communicate when absolutely necessary, allowing us to optimize the performance the most.           
+				Looking at \hyperref{T2}{Table 2}, we can see that our MPI program is performing very well in terms of performance scaling, in fact, we experience over 4.5 times execution time improvement when comparing a single vs four MPI nodes. When we look at \hyperref{T1}{Table 1}, we can see that MPI with four nodes is able to keep up with the sequential version of the algorithm, but not able to beat it by a large margin. One explanation for this is that the problem is not complex enough for the communication overhead to become negible. However, comparing MPI to the other three solutions, we can see a very different result. We believe that our tight control over communication in MPI is responsible for our MPI version performing so much better than the MapReduce, Spark, and MASS versions. As MPI conducts no communication unless specifically told by the programmer, we can ensure that we only communicate when absolutely necessary, allowing us to optimize the performance the most. \\
+	
             
         		\begin{minipage}{\linewidth}
         			\centering
         			\captionof{table}{Comparison of Computation for MPI} 
-        			\begin{tabular}{c|cc}\label{T2}
-        				\# Nodes & Average Execution Time (s)$^{\dagger}$ 	& Performance Improvement	\\
+        			\begin{tabular}{c|cc|cc}\label{T2}
+        				& \multicolumn{2}{c|}{36 Cities} & \multicolumn{2}{c}{500 Cities} \\
+        				\# Nodes & Average Execution Time (s)$^{\dagger}$ 	& Improvement & Execution Time (s) & Improvement \\
         				\hline
-        				1		& 32.8419									& N/A	\\
-        				2		& 16.0231									& 2.050	\\
-        				4		&  7.2312									& 4.542	\\
+        				1		& 32.8419	& N/A		& 155.536	& N/A 	\\
+        				2		& 16.0231	& 2.050		&  77.738	& 2.000	\\
+        				4		&  7.2312	& 4.542		&  39.627	& 3.925 \\
         			\noalign{\smallskip}\hline\noalign{\smallskip}
         			\multicolumn{3}{l}{\tiny $^\dagger$ Average over 100 trials}
         			\end{tabular}
@@ -175,66 +178,78 @@
         		\begin{minipage}{\linewidth}
                     \centering
         			\captionof{table}{Comparison of Computation for MapReduce} 
-        			\begin{tabular}{c|cc}\label{T3}
-        				\# Nodes & Average Execution Time (s) & Performance Improvement\\
+        			\begin{tabular}{c|cc|cc}\label{T3}
+        				& \multicolumn{2}{c|}{36 Cities} & \multicolumn{2}{c}{500 Cities} \\
+        				\# Nodes & Execution Time (s) & Improvement & Execution Time (s) & Improvement \\
         				\hline
-        				1	& 55.972	& N/A\\
-        				2	& 41.616	& 1.345\\
-        				4	& 44.423	& 1.256\\
-        			\noalign{\smallskip}\hline\noalign{\smallskip}
+        				1	& 55.972	& N/A	&	TODO	& N/A \\
+        				2	& 41.616	& 1.345	&	TODO	& TODO \\
+        				4	& 44.423	& 1.256 &	TODO	& TODO \\
         			\end{tabular}
         		\smallskip\smallskip\smallskip\smallskip
                 \end{minipage}
                 
-                MapReduce is designed to work efficiently with Big Data. In our algorithm the input data is tiny. The main focus is the iterative computation of intermediate solution. Such algorithms are not not the best choice to be implemented in MapReduce. Which results in the performance to be significantly lower than the sequential version. One way the performance could be improved is by making the number of cities in the input file very large. This would definitely show better performance than the sequential version.
+                MapReduce is designed to work efficiently with Big Data. In our algorithm the input data is tiny. The main focus is the iterative computation of intermediate solution. Such algorithms are not not the best choice to be implemented in MapReduce. Which results in the performance to be significantly lower than the sequential version. One way the performance could be improved is by making the number of cities in the input file very large. This would definitely show better performance than the sequential version.\\
             
             \subsubsection{Spark} \label{PER_SPARK}
         		\begin{minipage}{\linewidth}
         			\centering
         			\captionof{table}{Comparison of Computation for Spark} 
-        			\begin{tabular}{c|cc}\label{T4}
-        				\# Nodes  	& Average Execution Time (s) 	& Performance Improvement	\\
+        			\begin{tabular}{c|cc|cc}\label{T4}
+        				& \multicolumn{2}{c|}{36 Cities} & \multicolumn{2}{c}{500 Cities} \\
+        				\# Nodes  & Execution Time (s) 	& Improvement & Execution Time (s) 	& Improvement	\\
         				\hline
-        				1			& 36.866			& N/A	\\
-        				2			& 23.620			& 1.56	\\
-        				4			& 22.422 			& 1.644	\\
+        				1	& 36.866	& N/A	&	TODO	& N/A \\
+        				2	& 23.620	& 1.56	&	TODO	& TODO \\
+        				4	& 22.422 	& 1.644	&	TODO	& TODO \\
         			\end{tabular}
         		\smallskip\smallskip\smallskip\smallskip
 				\end{minipage}
 
-				In Spark, the user cannot assign a specific task to a designated node. On other words, the number of tasks and in which node they will be executed is managed implicitly by the driver program using DAG-Scheduler and Task Scheduler. Thus, the number of partitions used to ensure there will be at least the same number of tasks to utilize all node in the cluster. The number of partitions is changed based on the number of server nodes.
+				In Spark, the user cannot assign a specific task to a designated node; in other words, the number of tasks and the executor of a given task is managed by the DAG-Scheduler and Task Scheduler. For this reason, we used partitions to ensure there will be at least the same number of tasks as nodes in the cluster to utilize all computational resources available. The number of partitions changes based on the number of nodes in the cluster.\\
     		
     		\subsubsection{MASS} \label{PER_MASS}
         		\begin{minipage}{\linewidth}
                     \centering
         			\captionof{table}{Comparison of Computation for MASS} 
-        			\begin{tabular}{c|cc}\label{T5}
-        				\# Nodes & Average Execution Time (s) & Performance Improvement\\
+        			\begin{tabular}{c|cc|cc}\label{T5}
+        				& \multicolumn{2}{c|}{36 Cities} & \multicolumn{2}{c}{500 Cities} \\
+        				\# Nodes & Execution Time (s) & Improvement & Execution Time (s) & Improvement\\
         				\hline
-        				1	& 35.003	& N/A\\
-        				2	& 41.684	& 0.839\\
-        				4	& 58.490	& 0.598\\
-        			\noalign{\smallskip}\hline\noalign{\smallskip}
+        				1	& 35.003	& N/A	&	321.528	& N/A \\
+        				2	& 41.684	& 0.839 &	189.145	& 1.700 \\
+        				4	& 58.490	& 0.598 &	109.998	& 2.923 \\
         			\end{tabular}
         		\smallskip\smallskip\smallskip\smallskip
                 \end{minipage}
+            
+            	Our performance with MASS in the 36-city scenario created some rather strange results, as our execution time actually increased with more programming nodes. We hypothesized that this was due to the communication overhead. After running MASS on the 500-city scenario, this hypothesis seems to be supported, as our execution time now did what was expected and decreased as we added nodes. However, it appears that MASS still has too much overhead to be feasible for such a simple problem as all our other approaches still beat it by a wide margin in the 500-city scenario. \\
 		
-		\subsection{Programability} \label{PROG}
+		\subsection{Programmability} \label{PROG}
+			The programmability differed vastly between the different strategies that we used. \\
 			
-		
+			MPI makes it very easy to turn a sequential program into a parallel one and presented little problems for us. Furthermore, MPI allows us to have tight control over communication, allowing us to optimize our program more than the other versions did.\\
+			
+			Similarly, Spark also made it quite simple to program our SA algorithm and we had little issues to convert the sequential code into a parallel version. Spark presented some challenges in ensuring our random number generators were seeded correctly to prevent all executors from doing the same thing, however, it was not difficult to find a way to implement this using the ExecutorID in the SparkConf object. \\
+			
+			MapReduce, on the other hand, presented a bigger challenge due to the Hadoop file-system. First of all, we had to come up with a work around of starting our Mappers appropriately to ensure they all received the entire graph. As our graph was on multiple lines, we had to put our entire graph on a single line to ensure each Mapper receives the whole graph and not just a single city. Furthermore, MapReduce makes it challenging to communicate between Mapper and Reducer, therefore we had to do all work in the Mapper with the Reducer doing basically nothing. It has to be said that this was partly because of our problem, SA was simply not a good algorithm for MapReduce.\\
+			
+			Lastly, MASS presented a number of challenges for us as well. One of the main problems we had with it was the fact that it is very particular about the configurations in the nodes.xml document. Generally, we expect that if we tell java to run a given class, it will use the path that we gave it, however, MASS actually looks in the MASS home for files in the worker nodes, instead of passing the correct path to the workers. This made it somewhat challenging to run our code. However, the biggest challenge with MASS was the awful documentation that accompanies it. The documentation does not adequately explain what can and cannot be done with MASS or exactly how to use MASS. A good example would be passing multiple arguments to the callAll function. We assumed that we could pass an Object array to this method and this would be passed on to our function. However, this was not the case, so we were required to build a wrapper class to hold our arguments for the callAll call, which we then needed to unpack in the callAll function. This added unnecessary boilerplate code and complexity to our program. \\
+			 
+			Overall, the programmability of these four libraries was acceptable and most of them did not require too much boilerplate code to be added to use the library. MapReduce and Mass required the most boilerplate code to make the program work, with Spark requiring virtually nothing. MPI ended up in the middle of the pack as our program involved only a small amount of communication. \\
 		
         		\begin{minipage}{\linewidth}
                     \centering
         			\captionof{table}{Comparison of Boilerplate Calls} 
         			\begin{tabular}{c|cccc}\label{T6}
-        				Version 	& \# of Classes & \# Boilerplate Calls & Total \# Lines & Boilerplate \%\\
+        				Version 	& \# of Classes & Lines of Boilerplate Code & Total \# Lines & Boilerplate \%\\
         				\hline
         				Sequential	& 4		& N/A	& 104 	& N/A 	\\
         				MPI			& 6		& 18	& 137 	& 13.14 \\
         				MapReduce	& 6		& 19	& 141	& 13.48	\\
         				Spark		& 5		& 4		& 128	&  3.13	\\
         				MASS		& 6		& 47	& 135	& 34.81	\\
-        			\noalign{\smallskip}\hline\noalign{\smallskip}
+        				\hline
         				Mean: 		& 5.4	& 22	& 129	& 16.14	\\
         			\end{tabular}
         		\smallskip\smallskip\smallskip\smallskip
@@ -400,6 +415,10 @@ java SA 1000000 ../input_files/cities.txt
 Best solution found:path: 21 -> 27 -> 24 -> 25 -> 7 -> 31 -> 2 -> 22 -> 18 -> 12 -> 15 -> 28 -> 26 -> 4 -> 20 -> 9 -> 32 -> 14 -> 8 -> 34 -> 30 -> 19 -> 13 -> 23 -> 6 -> 10 -> 35 -> 5 -> 0 -> 11 -> 33 -> 17 -> 29 -> 3 -> 1 -> 16 | distance: 447.38786463942176
 Elapsed time:11409 ms.
 
+java SA 1000000 ../input_files/graph3.txt
+Best solution found:path: 483 -> 484 -> 485 -> 486 -> 487 -> ... 445 -> 444 -> 443 -> 442 -> 441 | distance: 12633.601936741623
+Elapsed time:157222 ms.
+
 --------------------------------------------
 
 /** MPI Program **/
@@ -407,42 +426,14 @@ run_mpi 4 Runner 2000000 ../input_files/cities.txt
 Solution is:path: 21 -> 27 -> 24 -> 25 -> 7 -> 31 -> 2 -> 22 -> 18 -> 12 -> 15 -> 28 -> 26 -> 4 -> 20 -> 9 -> 32 -> 14 -> 8 -> 34 -> 30 -> 19 -> 13 -> 23 -> 6 -> 10 -> 35 -> 5 -> 0 -> 11 -> 33 -> 17 -> 29 -> 3 -> 1 -> 16 | distance: 447.38786463942176
 Execution time: 7898 ms.
 
+run_mpi 4 Runner 1000000 ../input_files/graph3.txt
+Solution is:path: 370 -> 369 -> 368 -> 367 -> 366 -> ... 284 -> 285 -> 286 -> 287 -> 288 | distance: 14940.310162436743
+Execution time: 39627 ms.
+
 -------------------------------------------
 
 /** MapReduce Program **/
 hadoop jar TspRunner.jar TspRunner 1000000 input output
-18/12/10 13:27:14 WARN mapred.JobClient: Use GenericOptionsParser for parsing the arguments. Applications should implement Tool for the same.
-18/12/10 13:27:14 INFO mapred.FileInputFormat: Total input paths to process : 1
-18/12/10 13:27:14 INFO mapred.JobClient: Running job: job_201812101217_0007
-18/12/10 13:27:15 INFO mapred.JobClient:  map 0% reduce 0%
-18/12/10 13:27:39 INFO mapred.JobClient:  map 75% reduce 0%
-18/12/10 13:27:45 INFO mapred.JobClient:  map 100% reduce 0%
-18/12/10 13:27:48 INFO mapred.JobClient:  map 100% reduce 16%
-18/12/10 13:27:54 INFO mapred.JobClient:  map 100% reduce 100%
-18/12/10 13:27:56 INFO mapred.JobClient: Job complete: job_201812101217_0007
-18/12/10 13:27:56 INFO mapred.JobClient: Counters: 19
-18/12/10 13:27:56 INFO mapred.JobClient:   Map-Reduce Framework
-18/12/10 13:27:56 INFO mapred.JobClient:     Combine output records=4
-18/12/10 13:27:56 INFO mapred.JobClient:     Spilled Records=8
-18/12/10 13:27:56 INFO mapred.JobClient:     Reduce input records=4
-18/12/10 13:27:56 INFO mapred.JobClient:     Reduce output records=1
-18/12/10 13:27:56 INFO mapred.JobClient:     Map input records=4
-18/12/10 13:27:56 INFO mapred.JobClient:     Map output records=4
-18/12/10 13:27:56 INFO mapred.JobClient:     Map output bytes=972
-18/12/10 13:27:56 INFO mapred.JobClient:     Reduce shuffle bytes=813
-18/12/10 13:27:56 INFO mapred.JobClient:     Combine input records=4
-18/12/10 13:27:56 INFO mapred.JobClient:     Map input bytes=814
-18/12/10 13:27:56 INFO mapred.JobClient:     Reduce input groups=1
-18/12/10 13:27:56 INFO mapred.JobClient:   FileSystemCounters
-18/12/10 13:27:56 INFO mapred.JobClient:     HDFS_BYTES_READ=2041
-18/12/10 13:27:56 INFO mapred.JobClient:     FILE_BYTES_WRITTEN=2278
-18/12/10 13:27:56 INFO mapred.JobClient:     FILE_BYTES_READ=1066
-18/12/10 13:27:56 INFO mapred.JobClient:     HDFS_BYTES_WRITTEN=261
-18/12/10 13:27:56 INFO mapred.JobClient:   Job Counters
-18/12/10 13:27:56 INFO mapred.JobClient:     Launched map tasks=4
-18/12/10 13:27:56 INFO mapred.JobClient:     Launched reduce tasks=1
-18/12/10 13:27:56 INFO mapred.JobClient:     Rack-local map tasks=1
-18/12/10 13:27:56 INFO mapred.JobClient:     Data-local map tasks=3
 Execution Time: 42553ms
 
 hadoop fs -cat /user/anjald_css534/output/part-00000
