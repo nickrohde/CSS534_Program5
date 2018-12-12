@@ -145,7 +145,7 @@
     				Sequential	& 11.409							& N/A	\\
     				MPI Java	&  7.231							& 1.578	\\
     				MapReduce	& 41.616							& 0.274	\\
-    				Spark		& 41.378							& 0.276	\\
+    				Spark		& 22.422							& 0.509	\\
     				MASS		& 35.003							& 0.326	\\
     				\noalign{\smallskip}\hline\noalign{\smallskip}
     				\multicolumn{3}{l}{\tiny $^\dagger$ Time of the best performing configuration of the given SA version.}
@@ -218,6 +218,22 @@
                 \end{minipage}
 		
 		\subsection{Programability} \label{PROG}
+        		\begin{minipage}{\linewidth}
+                    \centering
+        			\captionof{table}{Comparison of Boilerplate Calls} 
+        			\begin{tabular}{c|ccc}\label{T6}
+        				Version 	& \# of Classes & \# Boilerplate Calls & Total \# Lines & Boilerplate \%\\
+        				\hline
+        				Sequential	& 4		& N/A	& 104 	& N/A 	\\
+        				MPI			& 6		& 18	& 137 	& 13.14 \\
+        				MapReduce	& 6		& 19	& 141	& 13.48	\\
+        				Spark		& 5		& 4		& 128	&  3.13	\\
+        				MASS		& 6		& 47	& 135	& 34.81	\\
+        			\noalign{\smallskip}\hline\noalign{\smallskip}
+        				Mean: 		& 5.4	& 22	& 129	& 16.14	\\
+        			\end{tabular}
+        		\smallskip\smallskip\smallskip\smallskip
+                \end{minipage}
 
 
 \pagebreak
