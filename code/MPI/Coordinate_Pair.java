@@ -1,7 +1,8 @@
-import java.lang.Math;
-import java.text.DecimalFormat;
-import java.io.*;
+import java.lang.Math;          // sqrt, pow
+import java.text.DecimalFormat; // DecimalFormat
+import java.io.*;               // Serializable Interface
 
+// Storage class for an x-y coordinate pair
 public class Coordinate_Pair implements Serializable
 {
     // Members:

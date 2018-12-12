@@ -1,9 +1,8 @@
-import java.io.*;
-import org.apache.commons.math3.random.MersenneTwister;
-import org.apache.commons.math3.random.RandomGenerator;
-import org.apache.commons.math3.random.RandomDataGenerator;
-import java.lang.Math;
-import mpi.*;
+import java.io.*;                                           // FileReader
+import org.apache.commons.math3.random.MersenneTwister;     // MersenneTwister
+import org.apache.commons.math3.random.RandomGenerator;     // RandomGenrator for MersenneTwister
+import org.apache.commons.math3.random.RandomDataGenerator; // RandomDataGenerator
+import mpi.*;                                               // MPI, MPIException
 
 public class Runner
 {
@@ -11,11 +10,11 @@ public class Runner
     {
         try
         {
-            MPI.Init(argv);                                               // initialize MPI
+            MPI.Init(argv); // initialize MPI
 
-            run(argv);
+            run(argv);      // run our simulation
 
-            MPI.Finalize();                                               // let MPI know we're done
+            MPI.Finalize(); // let MPI know we're done
         } // end try
         catch (Exception e)
         {
@@ -26,23 +25,26 @@ public class Runner
 
     private static void run(String[] argv) throws MPIException
     {
-        int n = Integer.parseInt(argv[0]);                            // time to wait during annealing steps for the system to stabilize
-        Graph g = make_graph(argv[1]);                                // input graph file
+        int n = Integer.parseInt(argv[0]);  // time to wait during annealing steps for the system to stabilize
+        Graph g = make_graph(argv[1]);      // input graph file
 
-        RandomGenerator mt19937 = new MersenneTwister(60 * MPI.COMM_WORLD.Rank());           // random engine
-        RandomDataGenerator rng = new RandomDataGenerator(mt19937);   // RNG used by annealing
+        // each rank must receive a unique seed to ensure they all take a different path
+        RandomGenerator mt19937 = new MersenneTwister(60 * MPI.COMM_WORLD.Rank());  // random engine
+        RandomDataGenerator rng = new RandomDataGenerator(mt19937);                 // RNG used by annealing
 
         try
         {
+            // instantiate our class
             SA_MPI SA = new SA_MPI(MPI.COMM_WORLD.Rank(), MPI.COMM_WORLD.Size());
             long time = System.currentTimeMillis();
 
+            // run the annealing
             Solution x = SA.simulated_annealing(g, n, rng);
-            
-            time = System.currentTimeMillis() - time;
 
-            //Solution res = compare_solutions(x, MPI.COMM_WORLD.Rank(), MPI.COMM_WORLD.Size());
+            // gather our best solution
             Solution res = (Solution)Communicator.get_best_solution(x, MPI.COMM_WORLD.Rank(), MPI.COMM_WORLD.Size());
+
+            time = System.currentTimeMillis() - time;
 
             if (MPI.COMM_WORLD.Rank() == 0)
             {
@@ -59,11 +61,11 @@ public class Runner
 
     private static double benchmark(String[] argv, int iterations) throws MPIException
     {
-        int n = Integer.parseInt(argv[0]);                            // time to wait during annealing steps for the system to stabilize
-        Graph g = make_graph(argv[1]);                                // input graph file
+        int n = Integer.parseInt(argv[0]);                                                  // time to wait during annealing steps for the system to stabilize
+        Graph g = make_graph(argv[1]);                                                      // input graph file
 
-        RandomGenerator mt19937 = new MersenneTwister(60 * MPI.COMM_WORLD.Rank());           // random engine
-        RandomDataGenerator rng = new RandomDataGenerator(mt19937);   // RNG used by annealing
+        RandomGenerator mt19937 = new MersenneTwister(60 * MPI.COMM_WORLD.Rank());          // random engine
+        RandomDataGenerator rng = new RandomDataGenerator(mt19937);                         // RNG used by annealing
         double duration = 0L;
 
         for (int i = 0; i < iterations; i++)

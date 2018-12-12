@@ -1,31 +1,35 @@
-import java.util.List;
-import java.util.ArrayList;
-import java.io.*;
-import java.text.DecimalFormat;
+import java.util.List;          // List<T> for ArrayList
+import java.util.ArrayList;     // ArrayList<T>
+import java.io.*;               // Serializable Interface, FileReader, BufferedReader
+import java.text.DecimalFormat; // Decimal Format
 
+// Storage class for a set of points in a fully connected graph
 public class Graph implements Serializable
 {
     // Class constants:
-    private static final Coordinate_Pair _origin = new Coordinate_Pair(0.0, 0.0);
+    private static final Coordinate_Pair _origin = new Coordinate_Pair(0.0, 0.0);   // Origin location for calculation of path lengths
 
 
     // Members:
-    private List<Coordinate_Pair> _city_locations;
+    private List<Coordinate_Pair> _city_locations;  // the graph coordinates
 
 
     // Constructors:
     public Graph(FileReader file)
     {
         BufferedReader reader;
-        _city_locations = new ArrayList<Coordinate_Pair>(36);
+        _city_locations = new ArrayList<Coordinate_Pair>(36);   // instantiate and reserve memory for 36 cities
 
         try
         {
+            // read our file line by line
             reader = new BufferedReader(file);
             String line = reader.readLine();
 
+            // read our file line by line
             while(line != null)
             {
+                // coordinate stored in the format X,Y
                 String[] stuff = line.split(",");
                 _city_locations.add(new Coordinate_Pair(Integer.parseInt(stuff[0]), Integer.parseInt(stuff[1])));
                 line = reader.readLine();
@@ -41,8 +45,10 @@ public class Graph implements Serializable
 
     public Graph(Graph other)
     {
+        // reserve space for faster graph building
         _city_locations = new ArrayList<Coordinate_Pair>(other.size());
 
+        // copy over the coordinates from the other graph
         for (Coordinate_Pair pair : other._city_locations)
         {
             _city_locations.add(new Coordinate_Pair(pair));

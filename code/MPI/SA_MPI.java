@@ -1,23 +1,23 @@
-import java.io.*;
-import org.apache.commons.math3.random.MersenneTwister;
-import org.apache.commons.math3.random.RandomGenerator;
-import org.apache.commons.math3.random.RandomDataGenerator;
-import java.lang.Math;
-import mpi.*;
+import java.io.*;                                           // Serializable Interface
+import org.apache.commons.math3.random.MersenneTwister;     // MersenneTwister
+import org.apache.commons.math3.random.RandomGenerator;     // RandomGenerator type for MersenneTwister
+import org.apache.commons.math3.random.RandomDataGenerator; // RandomDataGenerator
+import java.lang.Math;                                      // log, exp
+import mpi.*;                                               // MPIException
 
 public class SA_MPI
 {
     // Class constants:
-    private static final double DEFAULT_INITIAL_HEAT = 100;
-    private static final double DEFAULT_MIN_HEAT = 0.001;
-    private static final int DEFAULT_NUM_SWAPS = 1;
+    private static final double DEFAULT_INITIAL_HEAT = 100; // default value for starting heat of the system
+    private static final double DEFAULT_MIN_HEAT = 0.001;   // default value for stopping heat of the system
+    private static final int DEFAULT_NUM_SWAPS = 1;         // default value for number of swaps to generate a neighbor solution
 
     // Member constants:
-    private final double INITIAL_HEAT;
-    private final double MIN_HEAT;
-    private final int NUM_SWAPS;
-    private final int MY_RANK;
-    private final int MPI_SIZE;
+    private final double INITIAL_HEAT;                      // starting heat of the system
+    private final double MIN_HEAT;                          // stopping heat of the system
+    private final int NUM_SWAPS;                            // number of swaps to generate a neighbor solution
+    private final int MY_RANK;                              // this node's rank
+    private final int MPI_SIZE;                             // size of MPI cluster
 
 
     // Constructors:
@@ -42,9 +42,9 @@ public class SA_MPI
     public Solution simulated_annealing(Graph g, int n, RandomDataGenerator rng) throws MPIException
     {
         double heat = INITIAL_HEAT;                 // entropy of the system
-        int step = 2;                               // annealing step counter
+        int step = 2;                               // annealing step counter used for temperature calculation
         Solution x_best = new Solution();           // best solution ever seen
-        x_best.init(g);
+        x_best.init(g);                             // create a random starting solution
         Solution candidate = new Solution(x_best);  // current candidate solution
 
         // annealing stops once system cools down
@@ -81,6 +81,7 @@ public class SA_MPI
                 } // end else
             } // end for i
 
+            // get the best solution from the other MPI nodes
             candidate = (Solution)Communicator.get_best_solution(candidate, MY_RANK, MPI_SIZE);
 
             // update system entropy and annealing step counter
