@@ -154,6 +154,8 @@
     		\end{minipage}
         
             \subsubsection{MPI JAVA} \label{PER_MPI}
+				Looking at \hyperref{T2}{Table 2}, we can see that our MPI program is performing very well in terms of performance scaling, in fact, we experience over 4.5 times execution time improvement when comparing a single vs four MPI nodes. When we look at \hyperref{T1}{Table 1}, we can see that MPI with four nodes is able to keep up with the sequential version of the algorithm, but not able to beat it by a large margin. One explanation for this is that the problem is not complex enough for the communication overhead to become negible. However, comparing MPI to the other three solutions, we can see a very different result. We believe that our tight control over communication in MPI is responsible for our MPI version performing so much better than the MapReduce, Spark, and MASS versions. As MPI conducts no communication unless specifically told by the programmer, we can ensure that we only communicate when absolutely necessary, allowing us to optimize the performance the most.           
+            
         		\begin{minipage}{\linewidth}
         			\centering
         			\captionof{table}{Comparison of Computation for MPI} 
