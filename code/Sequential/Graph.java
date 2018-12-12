@@ -27,7 +27,7 @@ public class Graph
             while(line != null)
             {
                 String[] stuff = line.split(",");
-                _city_locations.add(new Coordinate_Pair(Integer.parseInt(stuff[0]), Integer.parseInt(stuff[1])));
+                _city_locations.add(new Coordinate_Pair(Double.parseDouble(stuff[0]), Double.parseDouble(stuff[1])));
                 line = reader.readLine();
             } // end while
 
