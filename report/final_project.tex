@@ -190,21 +190,17 @@
         		\begin{minipage}{\linewidth}
         			\centering
         			\captionof{table}{Comparison of Computation for Spark} 
-        			\begin{tabular}{c|c|cc}\label{T4}
-        				\# Nodes 	& \#Cores 	& Execution Time 	& Performance Improvement	\\
+        			\begin{tabular}{c|cc}\label{T4}
+        				\# Nodes  	& Average Execution Time (s) 	& Performance Improvement	\\
         				\hline
-        				1			& 1 		& 160.843			& N/A	\\
-        				1			& 2 		& 113.404			& 1.418	\\
-        				1			& 3 		& 77.057			& 2.087	\\
-        				2			& 2 		& 92.786			& 1.733	\\
-        				2			& 4 		& 60.676			& 2.650	\\
-        				2			& 6 		& 45.464			& 3.537	\\
-        				4			& 4 		& 68.041			& 2.363	\\
-        				4			& 8 		& 41.378			& \color{red}3.887	\\
-        				4			& 12 		& 45.328			& 3.548	\\
+        				1			& 36.866			& N/A	\\
+        				2			& 23.620			& 1.56	\\
+        				4			& 22.422 			& 1.644	\\
         			\end{tabular}
         		\smallskip\smallskip\smallskip\smallskip
-        		\end{minipage}
+				\end{minipage}
+
+				In Spark, the user cannot assign a specific task to a designated node. On other words, the number of tasks and in which node they will be executed is managed implicitly by the driver program using DAG-Scheduler and Task Scheduler. Thus, the number of partitions used to ensure there will be at least the same number of tasks to utilize all node in the cluster. The number of partitions is changed based on the number of server nodes.
     		
     		\subsubsection{MASS} \label{PER_MASS}
         		\begin{minipage}{\linewidth}
