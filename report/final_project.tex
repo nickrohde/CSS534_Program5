@@ -145,7 +145,7 @@
     				\hline
     				Sequential	& 11.409	& N/A			& 157.222	& N/A	\\
     				MPI Java 	&  7.231	& 1.578			&  39.627	& 3.968	\\
-    				MapReduce	& 41.616	& 0.274			& TODO		& TODO \\
+    				MapReduce	& 41.616	& 0.274			& 321.002	& 0.490 \\
     				Spark		& 22.422	& 0.509			& TODO		& TODO \\
     				MASS		& 35.003	& 0.326			& 109.998	& 1.429 \\
     				\noalign{\smallskip}\hline\noalign{\smallskip}
@@ -182,9 +182,9 @@
         				& \multicolumn{2}{c|}{36 Cities} & \multicolumn{2}{c}{500 Cities} \\
         				\# Nodes & Execution Time (s) & Improvement & Execution Time (s) & Improvement \\
         				\hline
-        				1	& 55.972	& N/A	&	TODO	& N/A \\
-        				2	& 41.616	& 1.345	&	TODO	& TODO \\
-        				4	& 44.423	& 1.256 &	TODO	& TODO \\
+        				1	& 55.972	& N/A	&	424.290	& N/A \\
+        				2	& 41.616	& 1.345	&	328.580	& 1.291 \\
+        				4	& 44.423	& 1.256 &	321.002	& 1.322 \\
         			\end{tabular}
         		\smallskip\smallskip\smallskip\smallskip
                 \end{minipage}
@@ -439,6 +439,13 @@ Execution Time: 42553ms
 hadoop fs -cat /user/anjald_css534/output/part-00000
 Best Solution Found:    path: 21 -> 27 -> 24 -> 25 -> 7 -> 31 -> 2 -> 22 -> 18 -> 12 -> 15 -> 28 -> 26 -> 4 -> 20 -> 9 -> 32 -> 14 -> 8 -> 34 -> 30 -> 19 -> 13 -> 23 -> 6 -> 10 -> 35 -> 5 -> 0 -> 11 -> 33 -> 17 -> 29 -> 3 -> 1 -> 16 | distance: 447.38786463942176
 
+hadoop jar TspRunner.jar TspRunner 1000000 input output
+Execution Time: 321002ms
+
+hadoop fs -cat /user/anjald_css534/output/part-00000
+Best Solution Found:	path: 483 -> 484 -> 485 -> 486 -> 487 -> ... 445 -> 444 -> 443 -> 442 -> 441 | distance: 12633.601936741623
+
+
 --------------------------------------------
 
 /** Spark Program **/
@@ -449,6 +456,7 @@ Elapsed time:22422 ms.
 spark-submit --class uwb.css534.prog5.App --master "spark://cssmpi1.uwb.edu:60007" --total-executor-cores 12 sa-tsp-spark-1.0-SNAPSHOT.jar 10000000 CSS534_Program5/code/input_files/cities.txt 100
 Best solution found:path: 21 -> 27 -> 24 -> 25 -> 7 -> 31 -> 2 -> 22 -> 18 -> 12 -> 15 -> 28 -> 26 -> 4 -> 20 -> 9 -> 32 -> 14 -> 8 -> 34 -> 30 -> 19 -> 13 -> 23 -> 6 -> 10 -> 35 -> 5 -> 0 -> 11 -> 33 -> 17 -> 29 -> 3 -> 1 -> 16 | distance: 447.38786463942176
 Elapsed time:29135 ms.
+
 --------------------------------------------
 
 /** MASS Program **/
@@ -459,6 +467,14 @@ MProcess on v0245p.host.s.uw.edu run with command: java -Xmx9g -cp /home/anjald_
 MASS.init: done
 Best Solution:path: 21 -> 27 -> 24 -> 25 -> 7 -> 20 -> 4 -> 26 -> 28 -> 31 -> 2 -> 22 -> 18 -> 12 -> 15 -> 16 -> 1 -> 3 -> 29 -> 17 -> 33 -> 11 -> 0 -> 5 -> 35 -> 10 -> 6 -> 23 -> 13 -> 19 -> 30 -> 34 -> 8 -> 14 -> 32 -> 9 | distance: 449.6584675618958
 Execution time = 57156 milliseconds
+
+java -jar prog5-1.0-SNAPSHOT.jar 2000000 cities.txt 4
+MProcess on v0243p.host.s.uw.edu run with command: java -Xmx9g -cp /home/rohden_css534/prog5/.jar edu.uw.bothell.css.dsl.MASS.MProcess v0243p.host.s.uw.edu 1 4 1 58136 /home/rohden_css534/prog5
+MProcess on v0244p.host.s.uw.edu run with command: java -Xmx9g -cp /home/rohden_css534/prog5/.jar edu.uw.bothell.css.dsl.MASS.MProcess v0244p.host.s.uw.edu 2 4 1 58136 /home/rohden_css534/prog5
+MProcess on v0245p.host.s.uw.edu run with command: java -Xmx9g -cp /home/rohden_css534/prog5/.jar edu.uw.bothell.css.dsl.MASS.MProcess v0245p.host.s.uw.edu 3 4 1 58136 /home/rohden_css534/prog5
+MASS.init: done
+Best Solution:path: 483 -> 484 -> 485 -> 486 -> 487 -> ... 445 -> 444 -> 443 -> 442 -> 441 | distance: 12633.601936741623
+Execution time = 109998 milliseconds
 
 
 			\end{lstlisting}	
